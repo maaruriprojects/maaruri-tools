@@ -10,7 +10,8 @@
     "lint": "ng lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "cd .. && husky client/.husky"
+    "prepare": "cd .. && husky client/.husky",
+    "serve:ssr:client": "node dist/client/server/server.mjs"
   },
   "private": true,
   "packageManager": "npm@12.0.1",
@@ -23,8 +24,11 @@
     "@angular/core": "^22.0.0",
     "@angular/forms": "^22.0.0",
     "@angular/platform-browser": "^22.0.0",
+    "@angular/platform-server": "^22.0.0",
     "@angular/router": "^22.0.0",
+    "@angular/ssr": "^22.0.7",
     "bootstrap": "^5.3.8",
+    "express": "^5.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -35,6 +39,8 @@
     "@commitlint/cli": "^21.2.1",
     "@commitlint/config-conventional": "^21.2.0",
     "@eslint/js": "^10.0.1",
+    "@types/express": "^5.0.1",
+    "@types/node": "^20.17.19",
     "angular-eslint": "22.1.0",
     "eslint": "^10.6.0",
     "eslint-config-prettier": "^10.1.8",
