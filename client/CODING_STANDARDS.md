@@ -80,6 +80,10 @@ standalone (the Angular 22 default — no `standalone: true` flag needed). Concr
 These are ESLint rules, not just guidance — a violation is a lint error:
 
 - `inject()` over constructor-parameter injection (`@angular-eslint/prefer-inject`).
+- `@Service()` over `@Injectable({ providedIn: 'root' })` for plain singleton services
+  (`prefer-service-decorator`) — see [ConfigService](src/app/core/config/config.service.ts) for the
+  pattern. `@Injectable()` is still correct for anything that isn't root-provided (e.g. a value
+  provided per-component).
 - `ChangeDetectionStrategy.OnPush` on every component (`prefer-on-push-component-change-detection`)
   — this project is zoneless, so change detection is already signal/OnPush-driven; this rule just
   keeps that explicit at the decorator level.
