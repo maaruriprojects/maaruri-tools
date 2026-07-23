@@ -1,0 +1,2 @@
+# Git hook scripts must keep LF endings; CRLF breaks the shebang under sh.
+client/.husky/* text eol=lf
