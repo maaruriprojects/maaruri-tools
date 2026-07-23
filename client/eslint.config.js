@@ -48,6 +48,7 @@ module.exports = defineConfig([
       '@angular-eslint/computed-must-return': 'error',
       '@angular-eslint/prefer-inject': 'error',
       '@angular-eslint/prefer-on-push-component-change-detection': 'error',
+      '@angular-eslint/prefer-service-decorator': 'error',
     },
   },
   {
