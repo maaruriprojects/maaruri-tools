@@ -60,6 +60,11 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Prerender,
     getPrerenderParams: getLocaleParams,
   },
+  {
+    path: `${LOCALE_PATH}/error`,
+    renderMode: RenderMode.Prerender,
+    getPrerenderParams: getLocaleParams,
+  },
   ...TOOL_CATEGORY_SEGMENT_LIST.flatMap((categorySegment): ServerRoute[] => [
     {
       path: `${LOCALE_PATH}/${categorySegment}`,

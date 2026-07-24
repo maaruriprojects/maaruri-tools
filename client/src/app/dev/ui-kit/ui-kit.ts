@@ -16,4 +16,10 @@ export class UiKit {
 
   protected readonly buttonVariants: ButtonVariant[] = ['primary', 'secondary', 'ghost'];
   protected readonly badgeColors: BadgeColor[] = ['success', 'warning', 'error', 'info', 'neutral'];
+
+  // Verifies GlobalErrorHandler end-to-end: throwing here should log full
+  // detail (check the console) and redirect to the friendly ErrorPage.
+  protected throwTestError(): void {
+    throw new Error('Deliberate test error from /dev/ui-kit — verifying GlobalErrorHandler.');
+  }
 }
