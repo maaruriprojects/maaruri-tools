@@ -1,0 +1,22 @@
+<div class="app-toast-container" aria-live="polite" aria-atomic="false">
+  @for (toast of toasts(); track toast.id) {
+    <div class="app-toast" [class]="'app-toast--' + toast.severity">
+      <p class="app-toast__message">{{ toast.message }}</p>
+      <button
+        type="button"
+        class="app-toast__dismiss"
+        (click)="dismiss.emit(toast.id)"
+        aria-label="Dismiss notification"
+      >
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <path
+            d="M6 6 L18 18 M18 6 L6 18"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+    </div>
+  }
+</div>

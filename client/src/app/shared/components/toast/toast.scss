@@ -1,0 +1,106 @@
+@use '../../../../styles/breakpoints' as bp;
+
+// Positioning: bottom-right on desktop/tablet, bottom-full-width on mobile
+// (Day 7 breakpoints). No box-shadow — doc06 reserves that for exactly one
+// component (the search suggestions dropdown); separation from the page
+// comes from --color-surface + the severity border instead, same as
+// AppBadge (Day 8).
+.app-toast-container {
+  position: fixed;
+  z-index: 1100; // above the loading overlay (1000, Day 12)
+  display: flex;
+  flex-direction: column-reverse; // newest toast nearest the anchored edge
+  gap: var(--space-sm);
+  bottom: var(--space-lg);
+  right: var(--space-lg);
+  max-width: 360px;
+  pointer-events: none; // clicks pass through the gaps; toasts re-enable it below
+
+  @include bp.mobile {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-width: none;
+    padding: var(--space-md);
+  }
+}
+
+.app-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-left: 3px solid var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--type-body-sm-size);
+  line-height: var(--type-body-sm-line-height);
+  pointer-events: auto;
+  animation: app-toast-enter 200ms var(--ease-out-snap);
+}
+
+// Per docs/design/02-color-typography.md — semantic tokens, same two-tier
+// role AppBadge already established: color signals via the border, not a
+// filled/tinted background.
+.app-toast--success {
+  border-left-color: var(--color-success);
+}
+
+.app-toast--error {
+  border-left-color: var(--color-error);
+}
+
+.app-toast--warning {
+  border-left-color: var(--color-warning);
+}
+
+.app-toast--info {
+  border-left-color: var(--color-info);
+}
+
+.app-toast__message {
+  flex: 1;
+  margin: 0;
+}
+
+.app-toast__dismiss {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-icon-muted);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-border);
+  }
+}
+
+// Entrance per docs/design/08-animation-motion.md §4: slide + fade in from
+// the anchored (bottom) edge, 200ms, --ease-out-snap.
+@keyframes app-toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-toast {
+    animation: app-toast-enter-reduced 200ms var(--ease-standard);
+  }
+}
+
+@keyframes app-toast-enter-reduced {
+  from {
+    opacity: 0;
+  }
+}

@@ -1,5 +1,10 @@
+import { ApplicationRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { httpErrorInterceptor } from '../../core/error-handling/http-error.interceptor';
 import { LoadingService } from '../../core/loading/loading.service';
+import { ToastService } from '../../core/toast/toast.service';
 import { UiKit } from './ui-kit';
 
 describe('UiKit', () => {
@@ -9,8 +14,8 @@ describe('UiKit', () => {
     fixture.detectChanges();
 
     const el = fixture.nativeElement as HTMLElement;
-    // 3 variants + 1 disabled + throw-error + slow + fast
-    expect(el.querySelectorAll('app-button')).toHaveLength(7);
+    // 3 variants + 1 disabled + throw-error + slow + fast + 4 severities + 1 failed-request
+    expect(el.querySelectorAll('app-button')).toHaveLength(12);
     expect(el.querySelectorAll('app-badge')).toHaveLength(5);
     expect(el.querySelectorAll('app-loading-spinner')).toHaveLength(2); // sm + lg preview
     expect(el.querySelector('.app-button--primary[disabled]')).toBeTruthy();
@@ -76,5 +81,55 @@ describe('UiKit', () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  it('each toast trigger adds a toast of the matching severity', async () => {
+    await TestBed.configureTestingModule({ imports: [UiKit] }).compileComponents();
+    const fixture = TestBed.createComponent(UiKit);
+    fixture.detectChanges();
+    const toastService = TestBed.inject(ToastService);
+
+    const component = fixture.componentInstance as unknown as {
+      showSuccessToast(): void;
+      showErrorToast(): void;
+      showWarningToast(): void;
+      showInfoToast(): void;
+    };
+    component.showSuccessToast();
+    component.showErrorToast();
+    component.showWarningToast();
+    component.showInfoToast();
+
+    expect(toastService.toasts().map((toast) => toast.severity)).toEqual([
+      'success',
+      'error',
+      'warning',
+      'info',
+    ]);
+  });
+
+  it('triggerFailedRequest() makes a real request through the interceptor chain and produces a toast', async () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(withInterceptors([httpErrorInterceptor])),
+        provideHttpClientTesting(),
+      ],
+    });
+    const fixture = TestBed.createComponent(UiKit);
+    const toastService = TestBed.inject(ToastService);
+    const httpMock = TestBed.inject(HttpTestingController);
+
+    const component = fixture.componentInstance as unknown as { triggerFailedRequest(): void };
+    component.triggerFailedRequest();
+    TestBed.tick();
+
+    httpMock
+      .expectOne((req) => req.url.endsWith('does-not-exist.json'))
+      .flush('not found', { status: 404, statusText: 'Not Found' });
+    await TestBed.inject(ApplicationRef).whenStable();
+
+    expect(toastService.toasts()).toHaveLength(1);
+    expect(toastService.toasts()[0].severity).toBe('error');
+    httpMock.verify();
   });
 });

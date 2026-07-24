@@ -3,6 +3,7 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
 import type { AppError } from './app-error';
 import { LoggingService } from '../logging/logging.service';
+import { ToastService } from '../toast/toast.service';
 
 const CONTEXT = '[httpErrorInterceptor]';
 
@@ -14,11 +15,15 @@ const CONTEXT = '[httpErrorInterceptor]';
 //
 // Logs full technical detail (status, URL, response body) via
 // LoggingService, then re-throws an `AppError`: a normalized, user-safe
-// object with no stack trace or raw server message. Whoever made the
-// request (a component, a future toast handler once Day 13 exists) reacts
-// to `AppError.message` directly — it's always safe to render as-is.
+// object with no stack trace or raw server message. Also calls
+// ToastService.error() directly — closing the loop from Day 11, so a
+// failed request always visibly notifies the user, not just whoever
+// happens to be watching the request's own error state — while still
+// re-throwing so a specific caller (e.g. httpResource's `.error()` signal)
+// can additionally react inline if it wants to.
 export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
   const loggingService = inject(LoggingService);
+  const toastService = inject(ToastService);
 
   return next(req).pipe(
     catchError((error: unknown) => {
@@ -43,20 +48,24 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
         source: 'http',
       };
 
+      toastService.error(appError.message);
+
       return throwError(() => appError);
     }),
   );
 };
 
+// Voice per docs/design/09-ux-flow-interaction.md §3: active voice, no
+// apology, two-part "what happened" + "what to do", no exclamation points.
 function userSafeMessageFor(httpError: HttpErrorResponse | undefined): string {
   if (!httpError || httpError.status === 0) {
     return "Couldn't reach the server. Check your connection and try again.";
   }
   if (httpError.status === 404) {
-    return "The requested resource couldn't be found.";
+    return "The requested resource couldn't be found. Try again or refresh the page.";
   }
   if (httpError.status >= 500) {
     return 'The server had a problem on its end. Please try again shortly.';
   }
-  return 'Something went wrong with that request. Please try again.';
+  return "That request didn't go through. Try again in a moment.";
 }

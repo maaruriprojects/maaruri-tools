@@ -43,3 +43,18 @@
     </app-button>
   </div>
 </section>
+
+<section>
+  <h2>Toasts</h2>
+  <div class="row">
+    <app-button [variant]="'secondary'" (click)="showSuccessToast()">Success toast</app-button>
+    <app-button [variant]="'secondary'" (click)="showErrorToast()">Error toast</app-button>
+    <app-button [variant]="'secondary'" (click)="showWarningToast()">Warning toast</app-button>
+    <app-button [variant]="'secondary'" (click)="showInfoToast()">Info toast</app-button>
+  </div>
+  <div class="row">
+    <app-button [variant]="'secondary'" (click)="triggerFailedRequest()">
+      Trigger a real failed request — should log, then toast
+    </app-button>
+  </div>
+</section>

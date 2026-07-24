@@ -1,8 +1,10 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, Injector, inject, input, runInInjectionContext } from '@angular/core';
 import { AppBadge, BadgeColor } from '../../shared/components/badge/badge';
 import { AppButton, ButtonVariant } from '../../shared/components/button/button';
 import { AppLoadingSpinner } from '../../shared/components/loading-spinner/loading-spinner';
+import { BaseApiService } from '../../core/api/base-api.service';
 import { LoadingService } from '../../core/loading/loading.service';
+import { ToastService } from '../../core/toast/toast.service';
 
 const SLOW_REQUEST_MS = 2000; // well past SPINNER_DEBOUNCE_MS — spinner should show
 const FAST_REQUEST_MS = 50; // well under it — spinner should never show
@@ -18,6 +20,9 @@ const FAST_REQUEST_MS = 50; // well under it — spinner should never show
 })
 export class UiKit {
   private readonly loadingService = inject(LoadingService);
+  private readonly toastService = inject(ToastService);
+  private readonly api = inject(BaseApiService);
+  private readonly injector = inject(Injector);
 
   readonly title = input('');
 
@@ -45,5 +50,36 @@ export class UiKit {
   private simulateRequest(durationMs: number): void {
     this.loadingService.increment();
     setTimeout(() => this.loadingService.decrement(), durationMs);
+  }
+
+  // One of each severity, so multiple toasts stacking (rather than
+  // overwriting each other) is visible by clicking a few of these in a row.
+  protected showSuccessToast(): void {
+    this.toastService.success('Copied 22.4 to clipboard.');
+  }
+
+  protected showErrorToast(): void {
+    this.toastService.error('Live exchange rates failed to load. Showing last known values.');
+  }
+
+  protected showWarningToast(): void {
+    this.toastService.warning('Approaching the daily limit for this tool.');
+  }
+
+  protected showInfoToast(): void {
+    this.toastService.info('Results update automatically as you type.');
+  }
+
+  // Real, deliberately-failing HTTP request through BaseApiService — the
+  // actual chain a live failure exercises: loadingInterceptor,
+  // httpErrorInterceptor (logs it, calls ToastService.error()), and this
+  // resource's own `.error()` signal. httpResource() needs an injection
+  // context, which a click handler isn't on its own, hence
+  // runInInjectionContext; see Day 9's ToolRegistryService for the normal
+  // (field-initializer) usage.
+  protected triggerFailedRequest(): void {
+    runInInjectionContext(this.injector, () => {
+      this.api.getResource(() => '/does-not-exist.json', { defaultValue: undefined });
+    });
   }
 }
