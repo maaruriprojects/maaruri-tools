@@ -1,0 +1,57 @@
+// Per docs/design/08-animation-motion.md §3: thin-stroke rotating arc (not
+// a multi-dot bounce), --color-icon-muted (never --color-accent — amber
+// stays reserved for a live/confirmed value; a spinner is the opposite —
+// nothing is confirmed yet), 800ms per turn, linear, no easing curve.
+
+.app-loading-spinner {
+  display: block;
+  animation:
+    app-loading-spinner-rotate 800ms var(--ease-linear) infinite,
+    app-loading-spinner-fade-in 100ms var(--ease-standard);
+}
+
+.app-loading-spinner--sm {
+  width: 20px; // matches doc 03's inline/chrome icon sizing
+  height: 20px;
+}
+
+.app-loading-spinner--lg {
+  width: 40px; // legible centered on a full-page overlay
+  height: 40px;
+}
+
+.app-loading-spinner__track {
+  fill: none;
+  stroke: var(--color-icon-muted);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 75 100; // pathLength="100" normalizes this to a ~3/4 arc
+}
+
+@keyframes app-loading-spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes app-loading-spinner-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-loading-spinner {
+    animation: app-loading-spinner-pulse 1500ms ease-in-out infinite;
+  }
+}
+
+@keyframes app-loading-spinner-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

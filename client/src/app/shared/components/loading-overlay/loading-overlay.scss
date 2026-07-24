@@ -1,0 +1,25 @@
+// Backdrop tint/opacity isn't specified in doc 08 (only the spinner glyph
+// itself is) — a judgment call: a translucent wash of --color-bg, so it
+// reads as "dimming the page" consistently in both themes rather than a
+// fixed black scrim.
+.app-loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: color-mix(in srgb, var(--color-bg) 85%, transparent);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 100ms var(--ease-standard),
+    visibility 100ms var(--ease-standard);
+}
+
+.app-loading-overlay--visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}

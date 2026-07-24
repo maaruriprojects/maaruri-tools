@@ -1,0 +1,9 @@
+<div
+  class="app-loading-overlay"
+  [class.app-loading-overlay--visible]="visible()"
+  [attr.aria-hidden]="!visible()"
+  role="status"
+  aria-live="polite"
+>
+  <app-loading-spinner [size]="'lg'" />
+</div>
