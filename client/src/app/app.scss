@@ -1,0 +1,18 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+// Temporary test button (see app.html) — styled entirely from tokens, so it
+// repaints on theme change the same way everything else does.
+.theme-toggle {
+  margin: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--type-body-sm-size);
+  cursor: pointer;
+}

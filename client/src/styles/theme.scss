@@ -1,0 +1,67 @@
+// Theme value sets — Maaruri Tools
+//
+// Light and dark values for the color tokens that actually change between
+// themes (everything else — spacing, typography, radius, the Readout, the
+// ad-system tokens — is theme-invariant and lives in _tokens.scss instead).
+//
+// Dark mode is not an inversion of light mode; per doc 02 §1, Graphite/Panel
+// are new dark tones and Mist/Haze are new light tones, not literal inverses.
+// Every value below is transcribed from docs/design/02-color-typography.md
+// §1 (core set) and §2 (semantic colors) — nothing here is a new decision.
+//
+// ThemeService toggles `data-theme="dark"` on <html>; that's the only
+// selector below besides :root (the light/default state).
+
+:root {
+  // Core set — light
+  --color-bg: #e6e8ea; // Bezel Gray
+  --color-surface: #f8f9f9; // Casing White
+  --color-text-primary: #262b2e; // Engraved Ink
+  --color-text-secondary: #4c5a62; // Steel Deep
+  --color-border: #d6dadc; // Hairline
+  --color-icon-muted: #5b6b74; // Steel
+
+  // Semantic — light
+  --color-success: #2a7150; // Confirm Green (deep)
+  --color-warning: #93521f; // Warning Rust
+  --color-error: #b23b3b; // Brick
+  --color-info: #33608f; // Gauge Blue
+}
+
+[data-theme='dark'] {
+  // Core set — dark
+  --color-bg: #1b1e20; // Graphite
+  --color-surface: #24282b; // Panel
+  --color-text-primary: #e9ebec; // Mist
+  --color-text-secondary: #9ba8ae; // Haze
+  --color-border: #3a4046; // Seam
+  --color-icon-muted: #9ba8ae; // Haze
+
+  // Semantic — dark
+  --color-success: #59c08a; // Confirm Green (bright)
+  --color-warning: #e0954c; // Warning Rust (bright)
+  --color-error: #d97575; // Brick (bright)
+  --color-info: #6fa3d8; // Gauge Blue (bright)
+}
+
+// Bootstrap bridge — _bootstrap-overrides.scss configures Bootstrap's Sass
+// variables with real (non-var()) values, since Bootstrap applies actual
+// Sass color functions to them internally, which can't operate on a `var()`
+// reference. That bakes our light palette into Bootstrap's own generated
+// `--bs-*` custom properties at compile time, but leaves them frozen — they
+// wouldn't react to `[data-theme="dark"]` on their own. This block re-points
+// the ones Bootstrap's component CSS actually consumes (body background/text,
+// borders, theme colors) at our runtime tokens instead, so anything styled
+// by Bootstrap utilities/components repaints on theme change exactly like
+// everything else — one alias, declared once, not duplicated per theme.
+:root {
+  --bs-body-bg: var(--color-bg);
+  --bs-body-color: var(--color-text-primary);
+  --bs-border-color: var(--color-border);
+  --bs-primary: var(--color-text-primary);
+  --bs-secondary: var(--color-text-secondary);
+  --bs-success: var(--color-success);
+  --bs-warning: var(--color-warning);
+  --bs-danger: var(--color-error);
+  --bs-info: var(--color-info);
+}
