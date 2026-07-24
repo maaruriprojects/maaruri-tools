@@ -144,6 +144,18 @@ export const routes: Routes = [
           ),
       },
       {
+        // GlobalErrorHandler's redirect target for uncaught fatal errors —
+        // distinct data from the 404 wildcard below, even though both
+        // render ErrorPage.
+        path: ROUTE_SEGMENTS.error,
+        loadComponent: () => import('./features/error-page/error-page').then((m) => m.ErrorPage),
+        data: {
+          title: 'Something Went Wrong',
+          breadcrumbLabel: 'Error',
+          metaDescription: "We hit a snag loading this page. It's been logged — try again.",
+        },
+      },
+      {
         path: '**',
         loadComponent: () => import('./features/error-page/error-page').then((m) => m.ErrorPage),
         data: {

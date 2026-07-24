@@ -1,0 +1,82 @@
+import { TestBed } from '@angular/core/testing';
+import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { firstValueFrom } from 'rxjs';
+import type { AppError } from './app-error';
+import { httpErrorInterceptor } from './http-error.interceptor';
+import { LoggingService } from '../logging/logging.service';
+
+describe('httpErrorInterceptor', () => {
+  let httpMock: HttpTestingController;
+  let httpClient: HttpClient;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(withInterceptors([httpErrorInterceptor])),
+        provideHttpClientTesting(),
+      ],
+    });
+    httpMock = TestBed.inject(HttpTestingController);
+    httpClient = TestBed.inject(HttpClient);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
+  });
+
+  it('re-throws a user-safe AppError, never the raw server body, for a 404', async () => {
+    const loggingSpy = vi.spyOn(TestBed.inject(LoggingService), 'error');
+
+    const resultPromise = firstValueFrom(httpClient.get('/api/widgets')).catch(
+      (error: AppError) => error,
+    );
+    httpMock
+      .expectOne('/api/widgets')
+      .flush('raw server stack trace or body', { status: 404, statusText: 'Not Found' });
+    const result = await resultPromise;
+
+    expect(result).toEqual({
+      message: "The requested resource couldn't be found.",
+      status: 404,
+      source: 'http',
+    });
+    expect(JSON.stringify(result)).not.toContain('raw server stack trace');
+
+    expect(loggingSpy).toHaveBeenCalledWith(
+      '404 Not Found — GET /api/widgets',
+      '[httpErrorInterceptor]',
+      expect.objectContaining({ url: '/api/widgets', method: 'GET', status: 404 }),
+    );
+  });
+
+  it('gives a user-safe message for a network failure (status 0)', async () => {
+    const resultPromise = firstValueFrom(httpClient.get('/api/widgets')).catch(
+      (error: AppError) => error,
+    );
+    httpMock.expectOne('/api/widgets').error(new ProgressEvent('error'), { status: 0 });
+    const result = await resultPromise;
+
+    expect(result).toEqual({
+      message: "Couldn't reach the server. Check your connection and try again.",
+      status: 0,
+      source: 'http',
+    });
+  });
+
+  it('gives a user-safe message for a 500', async () => {
+    const resultPromise = firstValueFrom(httpClient.get('/api/widgets')).catch(
+      (error: AppError) => error,
+    );
+    httpMock
+      .expectOne('/api/widgets')
+      .flush('internal error detail', { status: 500, statusText: 'Internal Server Error' });
+    const result = await resultPromise;
+
+    expect(result).toEqual({
+      message: 'The server had a problem on its end. Please try again shortly.',
+      status: 500,
+      source: 'http',
+    });
+  });
+});

@@ -10,6 +10,10 @@ export const ROUTE_SEGMENTS = {
   about: 'about',
   contact: 'contact',
   opportunities: 'opportunities',
+  // Fatal-error redirect target (GlobalErrorHandler) — distinct from the
+  // '**' wildcard 404, since "page not found" and "the app crashed" warrant
+  // different messaging even though both render ErrorPage.
+  error: 'error',
 } as const;
 
 // Path segments match the kebab-case folder names under features/tools/.
