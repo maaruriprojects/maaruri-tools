@@ -1,0 +1,38 @@
+<nav class="app-pagination" aria-label="Pagination">
+  <button
+    type="button"
+    class="app-pagination__nav"
+    aria-label="Previous page"
+    [disabled]="clampedCurrentPage() === 1"
+    (click)="previous()"
+  >
+    Prev
+  </button>
+
+  @for (item of items(); track $index) {
+    @if (item === 'ellipsis') {
+      <span class="app-pagination__ellipsis" aria-hidden="true">&hellip;</span>
+    } @else {
+      <button
+        type="button"
+        class="app-pagination__page"
+        [class.app-pagination__page--current]="item === clampedCurrentPage()"
+        [attr.aria-current]="item === clampedCurrentPage() ? 'page' : null"
+        [attr.aria-label]="'Page ' + item"
+        (click)="goTo(item)"
+      >
+        {{ item }}
+      </button>
+    }
+  }
+
+  <button
+    type="button"
+    class="app-pagination__nav"
+    aria-label="Next page"
+    [disabled]="clampedCurrentPage() === totalPages()"
+    (click)="next()"
+  >
+    Next
+  </button>
+</nav>

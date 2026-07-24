@@ -1,8 +1,17 @@
-import { Component, Injector, inject, input, runInInjectionContext, signal } from '@angular/core';
+import {
+  Component,
+  Injector,
+  computed,
+  inject,
+  input,
+  runInInjectionContext,
+  signal,
+} from '@angular/core';
 import { AppBadge, BadgeColor } from '../../shared/components/badge/badge';
 import { AppButton, ButtonVariant } from '../../shared/components/button/button';
 import { AppCard, CardLink } from '../../shared/components/card/card';
 import { AppLoadingSpinner } from '../../shared/components/loading-spinner/loading-spinner';
+import { AppPagination } from '../../shared/components/pagination/pagination';
 import { AppSearchBar } from '../../shared/components/search-bar/search-bar';
 import { BaseApiService } from '../../core/api/base-api.service';
 import { DEFAULT_LOCALE } from '../../core/i18n/locale';
@@ -13,6 +22,7 @@ import { ToastService } from '../../core/toast/toast.service';
 
 const SLOW_REQUEST_MS = 2000; // well past SPINNER_DEBOUNCE_MS — spinner should show
 const FAST_REQUEST_MS = 50; // well under it — spinner should never show
+const MOCK_LIST_PAGE_SIZE = 10;
 
 // A plain gray circle — a stand-in "icon" so the card grid demo exercises
 // the real <img loading="lazy"> path without needing real icon assets
@@ -31,7 +41,7 @@ interface CardDemoItem {
 // and gated by devRouteGuard (core/guards/dev-route.guard.ts).
 @Component({
   selector: 'app-ui-kit',
-  imports: [AppButton, AppBadge, AppLoadingSpinner, AppCard, AppSearchBar],
+  imports: [AppButton, AppBadge, AppLoadingSpinner, AppCard, AppSearchBar, AppPagination],
   templateUrl: './ui-kit.html',
   styleUrl: './ui-kit.scss',
 })
@@ -137,5 +147,22 @@ export class UiKit {
 
   protected onSearchSelect(entry: SearchIndexEntry): void {
     this.lastSelectedTool.set(entry);
+  }
+
+  // AppPagination demo: a mock 45-item list, paginated 10 per page — proves
+  // the component out against a caller that owns the "current page" state
+  // itself (AppPagination has no idea what these items even are).
+  protected readonly mockListItems: readonly string[] = Array.from(
+    { length: 45 },
+    (_, i) => `Item ${i + 1}`,
+  );
+  protected readonly mockListPage = signal(1);
+  protected readonly mockListPageItems = computed(() => {
+    const start = (this.mockListPage() - 1) * MOCK_LIST_PAGE_SIZE;
+    return this.mockListItems.slice(start, start + MOCK_LIST_PAGE_SIZE);
+  });
+
+  protected onMockListPageChange(page: number): void {
+    this.mockListPage.set(page);
   }
 }
