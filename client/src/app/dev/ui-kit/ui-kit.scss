@@ -29,3 +29,9 @@ section {
 .card-standalone {
   max-width: 240px;
 }
+
+// AppSearchBar is width: 100% with no layout opinion of its own (matches
+// AppCard's pattern above) — this consuming page constrains it.
+.search-bar-demo {
+  max-width: 360px;
+}

@@ -60,6 +60,24 @@
 </section>
 
 <section>
+  <h2>AppSearchBar</h2>
+  <div class="search-bar-demo">
+    <app-search-bar
+      [entries]="searchIndexService.entries()"
+      (toolSelected)="onSearchSelect($event)"
+    />
+  </div>
+  <p>
+    Last selected:
+    @if (lastSelectedTool(); as selected) {
+      {{ selected.title }} ({{ selected.category }})
+    } @else {
+      none yet
+    }
+  </p>
+</section>
+
+<section>
   <h2>AppCard — grid</h2>
   <div class="card-grid">
     @for (item of cardGridItems; track item.title) {
