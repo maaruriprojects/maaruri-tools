@@ -26,6 +26,13 @@
   --color-warning: #93521f; // Warning Rust
   --color-error: #b23b3b; // Brick
   --color-info: #33608f; // Gauge Blue
+
+  // doc06 §3 — the search suggestions dropdown is "the only floating
+  // overlay in this system, which is the one place a shadow is used at
+  // rest." Theme-varying (stronger in dark mode, where a light-mode alpha
+  // would barely read against a dark surface), so it lives here, not
+  // _tokens.scss.
+  --shadow-dropdown: 0 8px 16px rgba(0, 0, 0, 0.12);
 }
 
 [data-theme='dark'] {
@@ -42,6 +49,8 @@
   --color-warning: #e0954c; // Warning Rust (bright)
   --color-error: #d97575; // Brick (bright)
   --color-info: #6fa3d8; // Gauge Blue (bright)
+
+  --shadow-dropdown: 0 8px 16px rgba(0, 0, 0, 0.4);
 }
 
 // Bootstrap bridge — _bootstrap-overrides.scss configures Bootstrap's Sass

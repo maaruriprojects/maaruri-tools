@@ -1,0 +1,97 @@
+// Per docs/design/06-component-visual-design.md §3.
+
+.app-search-bar {
+  position: relative;
+  width: 100%;
+}
+
+.app-search-bar__icon {
+  position: absolute;
+  top: 50%;
+  left: var(--space-sm);
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: var(--color-icon-muted);
+  pointer-events: none;
+}
+
+.app-search-bar__input {
+  width: 100%;
+  padding: 10px var(--space-md) 10px calc(20px + var(--space-sm) * 2);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+  transition: border-color 120ms var(--ease-standard);
+
+  &::placeholder {
+    color: var(--color-text-secondary);
+  }
+
+  &:focus-visible {
+    border-color: var(--color-text-primary);
+    // The global amber ring (styles/_focus-visible.scss) renders outside
+    // this border automatically — both fire together, per doc06 §3.
+  }
+}
+
+// The one place in this system a shadow is used at rest, not just on
+// interaction (doc06 §3) — see --shadow-dropdown in theme.scss for why
+// it's theme-varying.
+.app-search-bar__dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-xs));
+  left: 0;
+  right: 0;
+  z-index: 1200; // above toasts (1100, Day 13) — a live listbox wins
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-dropdown);
+}
+
+.app-search-bar__option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  border: none;
+  border-left: 2px solid transparent;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: var(--type-body-size);
+  color: var(--color-text-primary);
+  text-align: left;
+  cursor: pointer;
+
+  // Keyboard-highlight: bg fill + amber left-edge accent bar — a second
+  // sanctioned use of --color-accent (the first is the global focus ring,
+  // Day 8), marking "the currently-selected one," same meaning amber
+  // carries everywhere else in this system.
+  &:hover,
+  &--highlighted {
+    background-color: var(--color-border);
+    border-left-color: var(--color-accent);
+  }
+}
+
+.app-search-bar__option-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-search-bar__empty {
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  font-family: var(--font-body);
+  font-size: var(--type-body-sm-size);
+  color: var(--color-text-secondary);
+}

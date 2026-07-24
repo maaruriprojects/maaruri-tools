@@ -1,11 +1,14 @@
-import { Component, Injector, inject, input, runInInjectionContext } from '@angular/core';
+import { Component, Injector, inject, input, runInInjectionContext, signal } from '@angular/core';
 import { AppBadge, BadgeColor } from '../../shared/components/badge/badge';
 import { AppButton, ButtonVariant } from '../../shared/components/button/button';
 import { AppCard, CardLink } from '../../shared/components/card/card';
 import { AppLoadingSpinner } from '../../shared/components/loading-spinner/loading-spinner';
+import { AppSearchBar } from '../../shared/components/search-bar/search-bar';
 import { BaseApiService } from '../../core/api/base-api.service';
 import { DEFAULT_LOCALE } from '../../core/i18n/locale';
 import { LoadingService } from '../../core/loading/loading.service';
+import { SearchIndexService } from '../../features/tools/search-index.service';
+import type { SearchIndexEntry } from '../../shared/models/search-index-entry';
 import { ToastService } from '../../core/toast/toast.service';
 
 const SLOW_REQUEST_MS = 2000; // well past SPINNER_DEBOUNCE_MS — spinner should show
@@ -28,7 +31,7 @@ interface CardDemoItem {
 // and gated by devRouteGuard (core/guards/dev-route.guard.ts).
 @Component({
   selector: 'app-ui-kit',
-  imports: [AppButton, AppBadge, AppLoadingSpinner, AppCard],
+  imports: [AppButton, AppBadge, AppLoadingSpinner, AppCard, AppSearchBar],
   templateUrl: './ui-kit.html',
   styleUrl: './ui-kit.scss',
 })
@@ -37,6 +40,7 @@ export class UiKit {
   private readonly toastService = inject(ToastService);
   private readonly api = inject(BaseApiService);
   private readonly injector = inject(Injector);
+  protected readonly searchIndexService = inject(SearchIndexService);
 
   readonly title = input('');
 
@@ -124,5 +128,14 @@ export class UiKit {
     runInInjectionContext(this.injector, () => {
       this.api.getResource(() => '/does-not-exist.json', { defaultValue: undefined });
     });
+  }
+
+  // Demo-only readout proving the (toolSelected) output actually fires — a real
+  // consumer (e.g. a future header) would navigate using entry.slug/category
+  // instead.
+  protected readonly lastSelectedTool = signal<SearchIndexEntry | null>(null);
+
+  protected onSearchSelect(entry: SearchIndexEntry): void {
+    this.lastSelectedTool.set(entry);
   }
 }

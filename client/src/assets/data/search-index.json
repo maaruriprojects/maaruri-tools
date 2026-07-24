@@ -1,0 +1,6 @@
+[
+  { "slug": "digital-clock", "title": "Digital Clock", "category": "time-date-tools" },
+  { "slug": "bmi-calculator", "title": "BMI Calculator", "category": "health-fitness" },
+  { "slug": "loan-calculator", "title": "Loan Calculator", "category": "finance-money-tools" },
+  { "slug": "json-formatter", "title": "JSON Formatter", "category": "development-web-tools" }
+]

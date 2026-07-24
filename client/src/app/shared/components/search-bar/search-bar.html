@@ -1,0 +1,62 @@
+<div class="app-search-bar">
+  <svg class="app-search-bar__icon" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="2" />
+    <line
+      x1="15"
+      y1="15"
+      x2="20"
+      y2="20"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+    />
+  </svg>
+
+  <input
+    #inputEl
+    type="text"
+    class="app-search-bar__input"
+    role="combobox"
+    autocomplete="off"
+    [placeholder]="placeholder()"
+    [value]="query()"
+    (input)="onInput(inputEl.value)"
+    (keydown.arrowDown)="onArrowDown($event)"
+    (keydown.arrowUp)="onArrowUp($event)"
+    (keydown.enter)="onEnter($event)"
+    (keydown.escape)="onEscape()"
+    aria-autocomplete="list"
+    aria-label="Search tools"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-controls]="listboxId"
+    [attr.aria-activedescendant]="highlightedIndex() >= 0 ? optionId(highlightedIndex()) : null"
+  />
+
+  @if (isOpen()) {
+    <div class="app-search-bar__dropdown" [id]="listboxId" role="listbox">
+      @if (results().length > 0) {
+        @for (entry of results(); track entry.slug; let i = $index) {
+          <button
+            type="button"
+            [id]="optionId(i)"
+            class="app-search-bar__option"
+            [class.app-search-bar__option--highlighted]="i === highlightedIndex()"
+            role="option"
+            tabindex="-1"
+            [attr.aria-selected]="i === highlightedIndex()"
+            (mouseenter)="setHighlighted(i)"
+            (click)="selectEntry(entry)"
+          >
+            <span class="app-search-bar__option-title">{{ entry.title }}</span>
+            <app-badge [text]="entry.category" [color]="'neutral'" />
+          </button>
+        }
+      } @else {
+        <!-- Compact dropdown scope only — the fuller "did you mean" +
+             browse-all empty state (doc09 §2) belongs to a full search
+             results page, not this inline suggestion list. -->
+        <p class="app-search-bar__empty">No tools match "{{ debouncedQuery() }}".</p>
+      }
+    </div>
+  }
+</div>

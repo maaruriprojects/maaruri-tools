@@ -1,4 +1,5 @@
 import { ApplicationRef } from '@angular/core';
+import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
@@ -6,16 +7,47 @@ import { provideRouter } from '@angular/router';
 import { httpErrorInterceptor } from '../../core/error-handling/http-error.interceptor';
 import { LoadingService } from '../../core/loading/loading.service';
 import { ToastService } from '../../core/toast/toast.service';
+import type { SearchIndexEntry } from '../../shared/models/search-index-entry';
 import { UiKit } from './ui-kit';
 
 describe('UiKit', () => {
-  it('renders every button variant and badge color', async () => {
+  const sampleSearchEntries: SearchIndexEntry[] = [
+    { slug: 'digital-clock', title: 'Digital Clock', category: 'time-date-tools' },
+  ];
+
+  let httpMock: HttpTestingController;
+
+  beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [UiKit],
-      providers: [provideRouter([])],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(withInterceptors([httpErrorInterceptor])),
+        provideHttpClientTesting(),
+      ],
     }).compileComponents();
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
+  });
+
+  // Creating a UiKit instance now also constructs SearchIndexService (a
+  // field on UiKit, injected for the AppSearchBar demo below), which fires
+  // its own httpResource request immediately — every test that creates a
+  // fixture must flush it, or the afterEach's httpMock.verify() fails on an
+  // outstanding request.
+  function createUiKit(): ComponentFixture<UiKit> {
     const fixture = TestBed.createComponent(UiKit);
     fixture.detectChanges();
+    httpMock.expectOne((req) => req.url.endsWith('search-index.json')).flush(sampleSearchEntries);
+    fixture.detectChanges();
+    return fixture;
+  }
+
+  it('renders every button variant and badge color', () => {
+    const fixture = createUiKit();
 
     const el = fixture.nativeElement as HTMLElement;
     // 3 variants + 1 disabled + throw-error + slow + fast + 4 severities + 1 failed-request
@@ -26,13 +58,8 @@ describe('UiKit', () => {
     expect(el.querySelector('.app-button--primary[disabled]')).toBeTruthy();
   });
 
-  it('renders a 3-card grid and a standalone card with projected content', async () => {
-    await TestBed.configureTestingModule({
-      imports: [UiKit],
-      providers: [provideRouter([])],
-    }).compileComponents();
-    const fixture = TestBed.createComponent(UiKit);
-    fixture.detectChanges();
+  it('renders a 3-card grid and a standalone card with projected content', () => {
+    const fixture = createUiKit();
 
     const el = fixture.nativeElement as HTMLElement;
     expect(el.querySelectorAll('.card-grid app-card')).toHaveLength(3);
@@ -41,13 +68,8 @@ describe('UiKit', () => {
     expect(el.querySelector('.card-standalone app-badge')).toBeTruthy();
   });
 
-  it('renders the "Throw test error" trigger', async () => {
-    await TestBed.configureTestingModule({
-      imports: [UiKit],
-      providers: [provideRouter([])],
-    }).compileComponents();
-    const fixture = TestBed.createComponent(UiKit);
-    fixture.detectChanges();
+  it('renders the "Throw test error" trigger', () => {
+    const fixture = createUiKit();
 
     const buttons = Array.from(
       (fixture.nativeElement as HTMLElement).querySelectorAll('button.app-button'),
@@ -57,13 +79,8 @@ describe('UiKit', () => {
     expect(throwButton).toBeTruthy();
   });
 
-  it('throwTestError() throws, so GlobalErrorHandler can catch it (see global-error-handler.spec.ts)', async () => {
-    await TestBed.configureTestingModule({
-      imports: [UiKit],
-      providers: [provideRouter([])],
-    }).compileComponents();
-    const fixture = TestBed.createComponent(UiKit);
-    fixture.detectChanges();
+  it('throwTestError() throws, so GlobalErrorHandler can catch it (see global-error-handler.spec.ts)', () => {
+    const fixture = createUiKit();
 
     // DOM event-listener exceptions don't propagate synchronously to the
     // caller of .click() (the browser reports them globally instead — the
@@ -76,8 +93,7 @@ describe('UiKit', () => {
   it('simulateSlowRequest() increments then decrements LoadingService after 2s', () => {
     vi.useFakeTimers();
     try {
-      TestBed.configureTestingModule({ imports: [UiKit], providers: [provideRouter([])] });
-      const fixture = TestBed.createComponent(UiKit);
+      const fixture = createUiKit();
       const loadingService = TestBed.inject(LoadingService);
 
       const component = fixture.componentInstance as unknown as { simulateSlowRequest(): void };
@@ -94,8 +110,7 @@ describe('UiKit', () => {
   it('simulateFastRequest() increments then decrements LoadingService after 50ms', () => {
     vi.useFakeTimers();
     try {
-      TestBed.configureTestingModule({ imports: [UiKit], providers: [provideRouter([])] });
-      const fixture = TestBed.createComponent(UiKit);
+      const fixture = createUiKit();
       const loadingService = TestBed.inject(LoadingService);
 
       const component = fixture.componentInstance as unknown as { simulateFastRequest(): void };
@@ -109,13 +124,8 @@ describe('UiKit', () => {
     }
   });
 
-  it('each toast trigger adds a toast of the matching severity', async () => {
-    await TestBed.configureTestingModule({
-      imports: [UiKit],
-      providers: [provideRouter([])],
-    }).compileComponents();
-    const fixture = TestBed.createComponent(UiKit);
-    fixture.detectChanges();
+  it('each toast trigger adds a toast of the matching severity', () => {
+    const fixture = createUiKit();
     const toastService = TestBed.inject(ToastService);
 
     const component = fixture.componentInstance as unknown as {
@@ -138,16 +148,8 @@ describe('UiKit', () => {
   });
 
   it('triggerFailedRequest() makes a real request through the interceptor chain and produces a toast', async () => {
-    TestBed.configureTestingModule({
-      providers: [
-        provideRouter([]),
-        provideHttpClient(withInterceptors([httpErrorInterceptor])),
-        provideHttpClientTesting(),
-      ],
-    });
-    const fixture = TestBed.createComponent(UiKit);
+    const fixture = createUiKit();
     const toastService = TestBed.inject(ToastService);
-    const httpMock = TestBed.inject(HttpTestingController);
 
     const component = fixture.componentInstance as unknown as { triggerFailedRequest(): void };
     component.triggerFailedRequest();
@@ -160,6 +162,22 @@ describe('UiKit', () => {
 
     expect(toastService.toasts()).toHaveLength(1);
     expect(toastService.toasts()[0].severity).toBe('error');
-    httpMock.verify();
+  });
+
+  it('renders the AppSearchBar demo, wired to SearchIndexService, and shows the last selection', () => {
+    const fixture = createUiKit();
+
+    const searchBarEl = fixture.nativeElement.querySelector('app-search-bar');
+    expect(searchBarEl).toBeTruthy();
+    expect(fixture.nativeElement.textContent).toContain('Last selected:');
+    expect(fixture.nativeElement.textContent).toContain('none yet');
+
+    const component = fixture.componentInstance as unknown as {
+      onSearchSelect(entry: SearchIndexEntry): void;
+    };
+    component.onSearchSelect(sampleSearchEntries[0]);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Digital Clock (time-date-tools)');
   });
 });
