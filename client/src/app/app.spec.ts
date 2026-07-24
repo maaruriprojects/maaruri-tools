@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { App } from './app';
 import { LoadingService } from './core/loading/loading.service';
+import { ToastService } from './core/toast/toast.service';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -49,5 +50,20 @@ describe('App', () => {
 
     const loadingService = TestBed.inject(LoadingService);
     expect(loadingService.isSpinnerVisible()).toBe(false);
+  });
+
+  it('renders the toast container, wired to ToastService', () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    TestBed.tick();
+
+    expect((fixture.nativeElement as HTMLElement).querySelector('app-toast')).toBeTruthy();
+
+    const toastService = TestBed.inject(ToastService);
+    toastService.success('Copied 22.4 to clipboard.');
+    fixture.detectChanges();
+
+    const toastEl = (fixture.nativeElement as HTMLElement).querySelector('.app-toast');
+    expect(toastEl?.textContent).toContain('Copied 22.4 to clipboard.');
   });
 });

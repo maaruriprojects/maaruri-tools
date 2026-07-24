@@ -9,3 +9,5 @@
 <router-outlet />
 
 <app-loading-overlay [visible]="loadingService.isSpinnerVisible()" />
+
+<app-toast [toasts]="toastService.toasts()" (dismiss)="toastService.dismiss($event)" />

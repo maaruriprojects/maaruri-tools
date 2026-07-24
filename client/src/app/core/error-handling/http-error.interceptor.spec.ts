@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import type { AppError } from './app-error';
 import { httpErrorInterceptor } from './http-error.interceptor';
 import { LoggingService } from '../logging/logging.service';
+import { ToastService } from '../toast/toast.service';
 
 describe('httpErrorInterceptor', () => {
   let httpMock: HttpTestingController;
@@ -37,7 +38,7 @@ describe('httpErrorInterceptor', () => {
     const result = await resultPromise;
 
     expect(result).toEqual({
-      message: "The requested resource couldn't be found.",
+      message: "The requested resource couldn't be found. Try again or refresh the page.",
       status: 404,
       source: 'http',
     });
@@ -78,5 +79,35 @@ describe('httpErrorInterceptor', () => {
       status: 500,
       source: 'http',
     });
+  });
+
+  it('closes the loop from Day 11: calls ToastService.error() with the same user-safe message', async () => {
+    const toastService = TestBed.inject(ToastService);
+
+    const resultPromise = firstValueFrom(httpClient.get('/api/widgets')).catch(
+      (error: AppError) => error,
+    );
+    httpMock
+      .expectOne('/api/widgets')
+      .flush('server body', { status: 500, statusText: 'Internal Server Error' });
+    await resultPromise;
+
+    expect(toastService.toasts()).toHaveLength(1);
+    expect(toastService.toasts()[0]).toMatchObject({
+      severity: 'error',
+      message: 'The server had a problem on its end. Please try again shortly.',
+    });
+  });
+
+  it('stacks toasts for multiple failed requests rather than overwriting one another', async () => {
+    const toastService = TestBed.inject(ToastService);
+
+    const first = firstValueFrom(httpClient.get('/api/a')).catch((error: AppError) => error);
+    const second = firstValueFrom(httpClient.get('/api/b')).catch((error: AppError) => error);
+    httpMock.expectOne('/api/a').flush('err', { status: 500, statusText: 'Internal Server Error' });
+    httpMock.expectOne('/api/b').flush('err', { status: 404, statusText: 'Not Found' });
+    await Promise.all([first, second]);
+
+    expect(toastService.toasts()).toHaveLength(2);
   });
 });

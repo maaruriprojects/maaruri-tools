@@ -1,8 +1,9 @@
 // The contract, defined before anything that produces or consumes it (see
 // SERVICE_GUIDELINES.md). What http-error.interceptor.ts re-throws instead
 // of a raw HttpErrorResponse — components/services can catch this and react
-// (e.g. show a toast once Day 13 builds one) without ever touching a stack
-// trace or a technical error message.
+// (the interceptor itself already calls ToastService.error() with
+// `message`, per Day 13; a specific caller can additionally react inline)
+// without ever touching a stack trace or a technical error message.
 export interface AppError {
   /** User-safe message. Always safe to render directly in UI. */
   readonly message: string;
