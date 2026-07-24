@@ -8,5 +8,7 @@ export const environment: AppConfig = {
   // Once a real API exists: apiBaseUrl: 'http://localhost:3000/api',
   useMockData: true,
   environment: 'development',
-  featureFlags: {},
+  // /dev/ui-kit (visual QA for shared components) is gated behind this —
+  // see core/guards/dev-route.guard.ts. On in development only.
+  featureFlags: { devUiKit: true },
 };

@@ -1,0 +1,80 @@
+// Per docs/design/06-component-visual-design.md §1. Rest-state bottom-edge
+// shadow (the "physical switch" detail) is deferred — it needs a new
+// theme-varying token not yet defined in Day 7's token set.
+
+.app-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px var(--space-lg);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  // Focus-visible ring is global (styles/_focus-visible.scss, doc 06 §0) —
+  // not redefined here, per that section's "every component inherits this."
+}
+
+.app-button--primary {
+  background-color: var(--color-text-primary);
+  color: var(--color-surface);
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-text-secondary);
+  }
+
+  &:active:not(:disabled) {
+    background-color: var(--color-text-secondary);
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    background-color: var(--color-border);
+    color: var(--color-icon-muted);
+  }
+}
+
+.app-button--secondary {
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  border: 1.5px solid var(--color-text-secondary);
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-text-primary);
+  }
+
+  &:active:not(:disabled) {
+    background-color: var(--color-border);
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    border-color: var(--color-border);
+    color: var(--color-icon-muted);
+  }
+}
+
+.app-button--ghost {
+  background-color: transparent;
+  color: var(--color-text-primary);
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-border);
+  }
+
+  &:active:not(:disabled) {
+    background-color: color-mix(in srgb, var(--color-icon-muted) 20%, transparent);
+  }
+
+  &:disabled {
+    color: var(--color-icon-muted);
+  }
+}

@@ -1,0 +1,39 @@
+// Per docs/design/06-component-visual-design.md §4. Rectangular (not pill),
+// background always neutral, only the left border + text carry color.
+
+.app-badge {
+  display: inline-block;
+  padding: var(--space-xs) var(--space-sm);
+  border-left: 3px solid;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  font-family: var(--font-body);
+  font-size: var(--type-caption-size);
+  font-weight: var(--type-caption-weight);
+  line-height: var(--type-caption-line-height);
+}
+
+.app-badge--success {
+  border-left-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.app-badge--warning {
+  border-left-color: var(--color-warning);
+  color: var(--color-warning);
+}
+
+.app-badge--error {
+  border-left-color: var(--color-error);
+  color: var(--color-error);
+}
+
+.app-badge--info {
+  border-left-color: var(--color-info);
+  color: var(--color-info);
+}
+
+.app-badge--neutral {
+  border-left-color: var(--color-text-secondary);
+  color: var(--color-text-secondary);
+}

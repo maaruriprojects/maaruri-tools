@@ -27,15 +27,18 @@ function getToolSlugParams(categorySegment: ToolCategorySegment) {
 
 // One static page per {locale} x {toolSlug} combination in the registry
 // (placeholder today; Day 6's real registry drives this the same way).
-// Every route below is prerendered except the catch-all 404, which has no
-// bounded set of paths and falls back to CSR.
-//
-// When src/app/dev/ui-kit is added (Day 8), add it here as CSR-only:
-//   { path: 'dev/ui-kit', renderMode: RenderMode.Client }
+// Every route below is prerendered except the catch-all 404 and /dev/ui-kit,
+// neither of which has a fixed set of paths worth prerendering — 404 is
+// unbounded, and the QA-only ui-kit route is gated off in production anyway
+// (core/guards/dev-route.guard.ts), so there's nothing to gain prerendering it.
 export const serverRoutes: ServerRoute[] = [
   {
     path: '',
     renderMode: RenderMode.Prerender,
+  },
+  {
+    path: 'dev/ui-kit',
+    renderMode: RenderMode.Client,
   },
   {
     path: LOCALE_PATH,

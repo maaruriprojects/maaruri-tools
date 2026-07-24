@@ -10,11 +10,22 @@ describe('routes', () => {
     expect(redirect?.redirectTo).toBe(`/${DEFAULT_LOCALE.code}`);
   });
 
-  it('nests every other route under a single :locale segment', () => {
-    const nonRedirectRoutes = routes.filter((route) => route.path !== '');
+  it('nests every content route under a single :locale segment', () => {
+    // dev/ui-kit is the one deliberate exception — an internal QA tool, not
+    // a locale-specific content page (see app.routes.ts's comment on it).
+    const contentRoutes = routes.filter(
+      (route) => route.path !== '' && route.path !== 'dev/ui-kit',
+    );
 
-    expect(nonRedirectRoutes).toHaveLength(1);
-    expect(nonRedirectRoutes[0].path).toBe(':locale');
+    expect(contentRoutes).toHaveLength(1);
+    expect(contentRoutes[0].path).toBe(':locale');
+  });
+
+  it('gates /dev/ui-kit behind devRouteGuard', () => {
+    const devRoute = routes.find((route) => route.path === 'dev/ui-kit');
+
+    expect(devRoute?.canActivate).toBeDefined();
+    expect(devRoute?.canActivate).toHaveLength(1);
   });
 
   it('registers a lazy route for every tool category, each with a :toolSlug child', async () => {
