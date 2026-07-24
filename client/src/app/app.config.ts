@@ -1,4 +1,5 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideClientHydration } from '@angular/platform-browser';
 import { TitleStrategy, provideRouter, withComponentInputBinding } from '@angular/router';
 
@@ -10,6 +11,8 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
     provideClientHydration(),
+    // withFetch: avoids the Node XHR shim during SSR/prerendering.
+    provideHttpClient(withFetch()),
     { provide: TitleStrategy, useClass: RouteDataTitleStrategy },
   ],
 };

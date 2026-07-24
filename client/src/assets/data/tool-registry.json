@@ -1,0 +1,38 @@
+[
+  {
+    "slug": "digital-clock",
+    "title": "Digital Clock",
+    "category": "time-date-tools",
+    "shortDescription": "A live digital clock with 12/24-hour display.",
+    "componentKey": "DigitalClock",
+    "seoDescription": "Free online digital clock — see the current time in 12-hour or 24-hour format, updated live in your browser.",
+    "icon": "clock"
+  },
+  {
+    "slug": "bmi-calculator",
+    "title": "BMI Calculator",
+    "category": "health-fitness",
+    "shortDescription": "Calculate your Body Mass Index from height and weight.",
+    "componentKey": "BmiCalculator",
+    "seoDescription": "Free BMI calculator — enter your height and weight to estimate your Body Mass Index and weight category.",
+    "icon": "scale"
+  },
+  {
+    "slug": "loan-calculator",
+    "title": "Loan Calculator",
+    "category": "finance-money-tools",
+    "shortDescription": "Estimate monthly payments and total interest on a loan.",
+    "componentKey": "LoanCalculator",
+    "seoDescription": "Free loan calculator — estimate monthly payments, total interest, and payoff time for any loan amount.",
+    "icon": "report-money"
+  },
+  {
+    "slug": "json-formatter",
+    "title": "JSON Formatter",
+    "category": "development-web-tools",
+    "shortDescription": "Format, validate, and beautify JSON data.",
+    "componentKey": "JsonFormatter",
+    "seoDescription": "Free online JSON formatter — validate and beautify JSON data with proper indentation, right in your browser.",
+    "icon": "braces"
+  }
+]
