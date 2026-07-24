@@ -1,6 +1,5 @@
 import { Service, inject } from '@angular/core';
-import { httpResource } from '@angular/common/http';
-import { ConfigService } from '../../core/config/config.service';
+import { BaseApiService } from '../../core/api/base-api.service';
 import type { ToolMeta } from '../../shared/models/tool-meta';
 
 // Not to be confused with ./tool-registry.ts, a build-time-only placeholder
@@ -9,17 +8,17 @@ import type { ToolMeta } from '../../shared/models/tool-meta';
 //
 // What changes when the real API exists: only `apiBaseUrl` in the active
 // src/environments/environment.*.ts file, from '/assets/data' to the API
-// origin. This service, and every consumer of it, stays exactly as-is —
-// nothing here references "JSON" or "API"; it just asks ConfigService for
-// the base URL and appends the resource path.
+// origin. This service, and every consumer of it, stays exactly as-is — it
+// goes through BaseApiService (see SERVICE_GUIDELINES.md) rather than
+// building its own URL or calling httpResource()/HttpClient directly, so
+// nothing here references "JSON" or "API".
 @Service()
 export class ToolRegistryService {
-  private readonly configService = inject(ConfigService);
+  private readonly api = inject(BaseApiService);
 
-  private readonly resource = httpResource<ToolMeta[]>(
-    () => `${this.configService.config.apiBaseUrl}/tool-registry.json`,
-    { defaultValue: [] },
-  );
+  private readonly resource = this.api.getResource<ToolMeta[]>(() => '/tool-registry.json', {
+    defaultValue: [],
+  });
 
   readonly tools = this.resource.value.asReadonly();
   readonly isLoading = this.resource.isLoading;
