@@ -1,0 +1,47 @@
+// No docs/design spec exists for breadcrumbs — this reuses the small-text
+// treatment (--type-body-sm-size, --color-text-secondary) already used
+// elsewhere rather than inventing a new visual language. Link focus comes
+// from the global focus-visible ring (styles/_focus-visible.scss), not
+// redefined here.
+
+.app-breadcrumb {
+  font-family: var(--font-body);
+  font-size: var(--type-body-sm-size);
+  line-height: var(--type-body-sm-line-height);
+}
+
+.app-breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-breadcrumb__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+
+  &:not(:last-child)::after {
+    content: '›';
+    color: var(--color-icon-muted);
+  }
+}
+
+.app-breadcrumb__link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--color-text-primary);
+    text-decoration: underline;
+  }
+}
+
+.app-breadcrumb__current {
+  color: var(--color-text-primary);
+  font-weight: var(--type-label-weight);
+}

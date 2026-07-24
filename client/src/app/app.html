@@ -6,6 +6,8 @@
   Switch to {{ themeService.theme() === 'dark' ? 'light' : 'dark' }} theme
 </button>
 
+<app-breadcrumb [items]="breadcrumbService.trail()" />
+
 <router-outlet />
 
 <app-loading-overlay [visible]="loadingService.isSpinnerVisible()" />

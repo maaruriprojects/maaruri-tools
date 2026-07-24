@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { routes } from './app.routes';
 import { TOOL_CATEGORY_SEGMENT_LIST } from './core/config/route-paths';
 import { DEFAULT_LOCALE } from './core/i18n/locale';
+import { TOOL_CATEGORY_META } from './features/tools/tool-categories';
 
 describe('routes', () => {
   it('redirects the empty path to the default locale', () => {
@@ -61,6 +62,25 @@ describe('routes', () => {
       expect(route.data?.['title']).toBeTruthy();
       expect(route.data?.['breadcrumbLabel']).toBeTruthy();
       expect(route.data?.['metaDescription']).toBeTruthy();
+    }
+  });
+
+  it('gives the :locale route its own "Home" breadcrumbLabel, as an ancestor of every page', () => {
+    const localeRoute = routes.find((route) => route.path === ':locale');
+
+    expect(localeRoute?.data?.['breadcrumbLabel']).toBe('Home');
+  });
+
+  it('attaches a matching breadcrumbLabel to each category route itself, not just its children', () => {
+    const localeRoute = routes.find((route) => route.path === ':locale');
+    const children = localeRoute?.children ?? [];
+
+    for (const categorySegment of TOOL_CATEGORY_SEGMENT_LIST) {
+      const categoryRoute = children.find((route) => route.path === categorySegment);
+
+      expect(categoryRoute?.data?.['breadcrumbLabel']).toBe(
+        TOOL_CATEGORY_META[categorySegment].breadcrumbLabel,
+      );
     }
   });
 });
