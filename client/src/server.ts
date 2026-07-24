@@ -56,6 +56,9 @@ if (isMainModule(import.meta.url) || process.env['pm_id']) {
       throw error;
     }
 
+    // Plain Node/Express startup, outside Angular's injector — LoggingService
+    // isn't reachable here (see core/logging/logging.service.ts and its
+    // eslint.config.js exception).
     console.log(`Node Express server listening on http://localhost:${port}`);
   });
 }
