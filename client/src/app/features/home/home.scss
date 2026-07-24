@@ -1,0 +1,97 @@
+// docs/design/05-dashboard-home-design.md's hero-search-over-tool-grid
+// pattern, at the scope this page actually has (see home.ts's comment on
+// what doc05 describes that isn't built here yet). Outer frame, spacing,
+// and fluid-grid rules per docs/design/04-page-layout-system.md §1/§3.
+@use '../../../styles/breakpoints' as bp;
+
+.home {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-lg);
+
+  @include bp.mobile {
+    padding: var(--space-xl) var(--space-md);
+  }
+}
+
+.home__intro {
+  max-width: 720px;
+  margin: 0 auto var(--space-2xl);
+  text-align: center;
+}
+
+.home__title {
+  margin: 0 0 var(--space-sm);
+  font-family: var(--font-display);
+  font-size: var(--type-display-size);
+  font-weight: var(--type-display-weight);
+  line-height: var(--type-display-line-height);
+  color: var(--color-text-primary);
+
+  @include bp.mobile {
+    font-size: var(--type-heading-size);
+    line-height: var(--type-heading-line-height);
+  }
+}
+
+.home__tagline {
+  margin: 0 0 var(--space-lg);
+  font-family: var(--font-body);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+  color: var(--color-text-secondary);
+}
+
+// AppSearchBar is width: 100% with no layout opinion of its own (see
+// ui-kit.scss's identical .search-bar-demo wrapper) — this page constrains
+// and centers it, "enlarged... the visual focus of the fold" per doc05 §1.
+.home__search {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+// A legend line above the grid, same role Template B's "CALCULATORS · 18
+// tools" line plays (doc04 §2) — left-aligned like a section label, not
+// centered like the hero copy above it.
+.home__stats {
+  margin: 0 0 var(--space-md);
+  font-family: var(--font-body);
+  font-size: var(--type-caption-size);
+  font-weight: var(--type-caption-weight);
+  line-height: var(--type-caption-line-height);
+  color: var(--color-text-secondary);
+}
+
+.home__status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-2xl) 0;
+  font-family: var(--font-body);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+  color: var(--color-text-secondary);
+}
+
+.home__status--error {
+  color: var(--color-error);
+}
+
+// Fluid per doc04 §3 ("tiles at a fixed minimum width... wrap into
+// additional columns as the viewport widens") rather than fixed
+// per-breakpoint column counts — this naturally lands at 1 column on
+// narrow phones, 2-3 through tablet, and up toward 5-6 as the viewport
+// approaches the 1440px outer frame. Mobile still gets an explicit
+// single-column override below: auto-fill alone could still fit 2 narrow
+// columns near the top of the mobile range (767px), and doc07 §3 wants
+// mobile's grid to be single-column outright, not just "usually" so.
+.home__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-lg);
+
+  @include bp.mobile {
+    grid-template-columns: 1fr;
+  }
+}

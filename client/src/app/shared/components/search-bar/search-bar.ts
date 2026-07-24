@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { Component, ElementRef, computed, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { debounceTime, fromEvent } from 'rxjs';
@@ -33,6 +34,7 @@ let nextInstanceId = 0;
 })
 export class AppSearchBar {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
+  private readonly document = inject(DOCUMENT);
   private readonly instanceId = nextInstanceId++;
 
   readonly entries = input<readonly SearchIndexEntry[]>([]);
@@ -80,7 +82,11 @@ export class AppSearchBar {
   });
 
   constructor() {
-    fromEvent<MouseEvent>(document, 'click')
+    // Injected DOCUMENT, not the bare global — this constructor runs during
+    // SSR/prerendering too (this component now sits on the homepage, which
+    // is prerendered), and the global `document` identifier doesn't exist
+    // in that Node environment.
+    fromEvent<MouseEvent>(this.document, 'click')
       .pipe(takeUntilDestroyed())
       .subscribe((event) => {
         if (!this.elementRef.nativeElement.contains(event.target as Node)) {

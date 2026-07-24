@@ -1,0 +1,42 @@
+<div class="home">
+  <header class="home__intro">
+    <h1 class="home__title">{{ title() }}</h1>
+    <p class="home__tagline">{{ metaDescription() }}</p>
+
+    <div class="home__search">
+      <app-search-bar
+        [entries]="searchIndexService.entries()"
+        (toolSelected)="onToolSelected($event)"
+      />
+    </div>
+  </header>
+
+  <section class="home__tools" aria-label="All tools">
+    @if (toolRegistry.isLoading()) {
+      <div class="home__status">
+        <app-loading-spinner [size]="'lg'" />
+        <p>Loading tools…</p>
+      </div>
+    } @else if (toolRegistry.error(); as error) {
+      <p class="home__status home__status--error">Couldn't load tools: {{ error.message }}</p>
+    } @else {
+      <!-- Only read once the resource has actually resolved — reading
+           tools() while the resource is loading/errored throws, so this
+           real-data caption (docs/design/05-dashboard-home-design.md §1's
+           "200 tools · 11 categories · zero sign-up" line) can only live in
+           this branch, not up in the always-rendered header. -->
+      <p class="home__stats">
+        {{ toolRegistry.tools().length }} tools · {{ categoryCount }} categories · zero sign-up
+      </p>
+      <div class="home__grid">
+        @for (tool of toolRegistry.tools(); track tool.slug) {
+          <app-card
+            [title]="tool.title"
+            [description]="tool.shortDescription"
+            [link]="toolLink(tool)"
+          />
+        }
+      </div>
+    }
+  </section>
+</div>
