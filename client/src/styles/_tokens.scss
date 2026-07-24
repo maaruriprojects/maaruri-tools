@@ -10,9 +10,10 @@
 // semantic colors) live in theme.scss instead, as the light/dark value sets.
 //
 // Every value here traces back to docs/design/02-color-typography.md
-// (typography, theme-invariant colors) and docs/design/04-page-layout-system.md
-// (spacing) and docs/design/06-component-visual-design.md (radius). Nothing
-// below is a new decision — this file is a transcription.
+// (typography, theme-invariant colors), docs/design/04-page-layout-system.md
+// (spacing), docs/design/06-component-visual-design.md (radius), and
+// docs/design/08-animation-motion.md (motion). Nothing below is a new
+// decision — this file is a transcription.
 
 :root {
   // ---------------------------------------------------------------------
@@ -102,4 +103,18 @@
   --radius-sm: 6px; // buttons, inputs, badges
   --radius-md: 10px; // cards, tool/category tiles
   --radius-lg: 12px; // logo containers (doc 03, unchanged)
+
+  // ---------------------------------------------------------------------
+  // Motion (doc 08 §0). No bounce/overshoot/spring easing anywhere in this
+  // system — quick and mechanical, not playful. Exits are equal to or
+  // faster than entrances everywhere this is used.
+  // ---------------------------------------------------------------------
+  --motion-instant: 0ms; // focus-visible ring, route transitions
+  --motion-fast: 100ms; // press/active states, exits
+  --motion-base: 150ms; // hover entrances, the Readout's update pulse
+  --motion-slow: 200ms; // toast entrance — the longest duration in this system
+  --ease-out-snap: cubic-bezier(0.16, 1, 0.3, 1); // things appearing/responding
+  --ease-in-snap: cubic-bezier(0.7, 0, 0.84, 0); // things dismissing/exiting
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1); // plain state changes (color, border)
+  --ease-linear: linear; // the loading spinner's rotation only
 }

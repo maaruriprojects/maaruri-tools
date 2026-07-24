@@ -6,6 +6,7 @@ import { TitleStrategy, provideRouter, withComponentInputBinding } from '@angula
 import { routes } from './app.routes';
 import { GlobalErrorHandler } from './core/error-handling/global-error-handler';
 import { httpErrorInterceptor } from './core/error-handling/http-error.interceptor';
+import { loadingInterceptor } from './core/loading/loading.interceptor';
 import { RouteDataTitleStrategy } from './core/seo/route-data-title-strategy';
 
 export const appConfig: ApplicationConfig = {
@@ -14,7 +15,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()),
     provideClientHydration(),
     // withFetch: avoids the Node XHR shim during SSR/prerendering.
-    provideHttpClient(withFetch(), withInterceptors([httpErrorInterceptor])),
+    // loadingInterceptor runs first so it counts the request as in-flight
+    // for its whole lifecycle, including httpErrorInterceptor's processing.
+    provideHttpClient(withFetch(), withInterceptors([loadingInterceptor, httpErrorInterceptor])),
     { provide: TitleStrategy, useClass: RouteDataTitleStrategy },
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
   ],

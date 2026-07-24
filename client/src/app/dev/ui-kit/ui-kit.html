@@ -27,3 +27,19 @@
     <app-button [variant]="'secondary'" (click)="throwTestError()">Throw test error</app-button>
   </div>
 </section>
+
+<section>
+  <h2>Loading</h2>
+  <div class="row">
+    <app-loading-spinner [size]="'sm'" />
+    <app-loading-spinner [size]="'lg'" />
+  </div>
+  <div class="row">
+    <app-button [variant]="'secondary'" (click)="simulateSlowRequest()">
+      Simulate slow request (2s) — spinner should show
+    </app-button>
+    <app-button [variant]="'secondary'" (click)="simulateFastRequest()">
+      Simulate fast request (50ms) — spinner should not show
+    </app-button>
+  </div>
+</section>

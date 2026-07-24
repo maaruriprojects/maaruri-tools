@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { LoadingService } from '../../core/loading/loading.service';
 import { UiKit } from './ui-kit';
 
 describe('UiKit', () => {
@@ -8,8 +9,10 @@ describe('UiKit', () => {
     fixture.detectChanges();
 
     const el = fixture.nativeElement as HTMLElement;
-    expect(el.querySelectorAll('app-button')).toHaveLength(5); // 3 variants + 1 disabled + throw-error
+    // 3 variants + 1 disabled + throw-error + slow + fast
+    expect(el.querySelectorAll('app-button')).toHaveLength(7);
     expect(el.querySelectorAll('app-badge')).toHaveLength(5);
+    expect(el.querySelectorAll('app-loading-spinner')).toHaveLength(2); // sm + lg preview
     expect(el.querySelector('.app-button--primary[disabled]')).toBeTruthy();
   });
 
@@ -37,5 +40,41 @@ describe('UiKit', () => {
     // exist to catch), so this calls the handler directly.
     const component = fixture.componentInstance as unknown as { throwTestError(): void };
     expect(() => component.throwTestError()).toThrow(/Deliberate test error/);
+  });
+
+  it('simulateSlowRequest() increments then decrements LoadingService after 2s', () => {
+    vi.useFakeTimers();
+    try {
+      TestBed.configureTestingModule({ imports: [UiKit] });
+      const fixture = TestBed.createComponent(UiKit);
+      const loadingService = TestBed.inject(LoadingService);
+
+      const component = fixture.componentInstance as unknown as { simulateSlowRequest(): void };
+      component.simulateSlowRequest();
+      expect(loadingService.isLoading()).toBe(true);
+
+      vi.advanceTimersByTime(2000);
+      expect(loadingService.isLoading()).toBe(false);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('simulateFastRequest() increments then decrements LoadingService after 50ms', () => {
+    vi.useFakeTimers();
+    try {
+      TestBed.configureTestingModule({ imports: [UiKit] });
+      const fixture = TestBed.createComponent(UiKit);
+      const loadingService = TestBed.inject(LoadingService);
+
+      const component = fixture.componentInstance as unknown as { simulateFastRequest(): void };
+      component.simulateFastRequest();
+      expect(loadingService.isLoading()).toBe(true);
+
+      vi.advanceTimersByTime(50);
+      expect(loadingService.isLoading()).toBe(false);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

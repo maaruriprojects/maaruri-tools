@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { App } from './app';
+import { LoadingService } from './core/loading/loading.service';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -36,5 +37,17 @@ describe('App', () => {
     TestBed.tick();
 
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+  });
+
+  it('renders the global loading overlay, driven by LoadingService', () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    TestBed.tick();
+
+    const overlay = (fixture.nativeElement as HTMLElement).querySelector('app-loading-overlay');
+    expect(overlay).toBeTruthy();
+
+    const loadingService = TestBed.inject(LoadingService);
+    expect(loadingService.isSpinnerVisible()).toBe(false);
   });
 });
