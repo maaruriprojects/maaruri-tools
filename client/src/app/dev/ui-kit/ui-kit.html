@@ -58,3 +58,30 @@
     </app-button>
   </div>
 </section>
+
+<section>
+  <h2>AppCard — grid</h2>
+  <div class="card-grid">
+    @for (item of cardGridItems; track item.title) {
+      <app-card
+        [title]="item.title"
+        [description]="item.description"
+        [imageUrl]="placeholderIcon"
+        [link]="item.link"
+      />
+    }
+  </div>
+</section>
+
+<section>
+  <h2>AppCard — standalone (e.g. a related-tool suggestion)</h2>
+  <div class="card-standalone">
+    <app-card
+      [title]="relatedToolCard.title"
+      [description]="relatedToolCard.description"
+      [link]="relatedToolCard.link"
+    >
+      <app-badge [text]="'New'" [color]="'info'" />
+    </app-card>
+  </div>
+</section>

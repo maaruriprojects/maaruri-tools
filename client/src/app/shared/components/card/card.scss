@@ -1,0 +1,54 @@
+// Per docs/design/06-component-visual-design.md §2 (tool card). No fixed
+// width/height here — sizing is the consumer's layout (a grid or flex
+// container around several cards, or nothing around a standalone one).
+
+.app-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    border-color 120ms var(--ease-standard),
+    transform 100ms var(--ease-out-snap);
+
+  // Category-accent hover border (doc06) deferred — see card.ts comment.
+  // Neutral equivalent using existing tokens only.
+  &:hover {
+    border-color: var(--color-text-secondary);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  // Focus-visible ring is global (styles/_focus-visible.scss, doc 06 §0) —
+  // not redefined here. The whole card is the link/focus target, per doc06
+  // — this is the root element, not a wrapper around a separate link.
+}
+
+.app-card__image {
+  object-fit: contain;
+}
+
+.app-card__title {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  color: var(--color-text-primary);
+}
+
+.app-card__description {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--type-body-sm-size);
+  line-height: var(--type-body-sm-line-height);
+  color: var(--color-text-secondary);
+}

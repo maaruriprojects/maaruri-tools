@@ -1,0 +1,22 @@
+<a class="app-card" [routerLink]="link()">
+  @if (imageUrl()) {
+    <!-- Plain loading="lazy", not NgOptimizedImage — this is a small
+         decorative/representational icon, not an LCP-relevant content
+         image, so the extra width/height-priority machinery isn't
+         warranted; ~200 of these across the app is exactly what
+         loading="lazy" alone already handles well. -->
+    <img
+      class="app-card__image"
+      [src]="imageUrl()"
+      [alt]="imageAlt() || title()"
+      loading="lazy"
+      width="48"
+      height="48"
+    />
+  }
+  <h3 class="app-card__title">{{ title() }}</h3>
+  @if (description()) {
+    <p class="app-card__description">{{ description() }}</p>
+  }
+  <ng-content />
+</a>

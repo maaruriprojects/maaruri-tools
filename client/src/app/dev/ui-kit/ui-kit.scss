@@ -15,3 +15,17 @@ section {
   gap: var(--space-sm);
   margin-bottom: var(--space-sm);
 }
+
+// AppCard has no layout opinion of its own (see card.ts) — this grid is
+// entirely this consuming page's doing, proving the component behaves as
+// a plain grid item.
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-md);
+  max-width: 720px;
+}
+
+.card-standalone {
+  max-width: 240px;
+}
