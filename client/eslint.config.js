@@ -49,12 +49,26 @@ module.exports = defineConfig([
       '@angular-eslint/prefer-inject': 'error',
       '@angular-eslint/prefer-on-push-component-change-detection': 'error',
       '@angular-eslint/prefer-service-decorator': 'error',
+      // All logging goes through LoggingService (core/logging) so a remote
+      // sink can be added in one file later, not at every call site.
+      'no-console': 'error',
     },
   },
   {
     files: ['**/*.html'],
     extends: [angular.configs.templateRecommended, angular.configs.templateAccessibility],
     rules: {},
+  },
+  {
+    // The only files allowed to call console.* directly: the logging
+    // service itself, and two entry points that run outside Angular's
+    // injector (so LoggingService isn't available yet) — the bootstrap
+    // failure handler in main.ts and the Express server startup log in
+    // server.ts.
+    files: ['src/app/core/logging/logging.service.ts', 'src/main.ts', 'src/server.ts'],
+    rules: {
+      'no-console': 'off',
+    },
   },
   // Must stay last: turns off ESLint stylistic rules that would fight Prettier's formatting.
   eslintConfigPrettier,
