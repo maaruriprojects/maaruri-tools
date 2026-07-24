@@ -1,1 +1,9 @@
+<!-- Temporary test button — proves theme.scss's data-theme switching works
+     end-to-end. No conditional styling here: the button's colors come from
+     the same CSS custom properties every other element uses, so the whole
+     page repaints on toggle without any component-level branching. -->
+<button type="button" class="theme-toggle" (click)="themeService.toggle()">
+  Switch to {{ themeService.theme() === 'dark' ? 'light' : 'dark' }} theme
+</button>
+
 <router-outlet />

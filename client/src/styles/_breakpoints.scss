@@ -1,0 +1,33 @@
+// Breakpoints — Maaruri Tools
+//
+// Fixed numbers per docs/design/07-responsive-strategy.md (and referenced in
+// 04/06): mobile <768px, tablet 768–1024px, desktop >1024px. These are plain
+// SCSS (compile-time) rather than CSS custom properties, since @media query
+// conditions can't reference custom properties — every future component
+// should use these mixins instead of repeating "768px" as a magic number.
+//
+// NOT Bootstrap's own breakpoints (sm/md/lg/xl at 576/768/992/1200) — this
+// project's three-tier spec is a deliberate, different scale.
+
+$mobile-max: 767.98px; // upper bound of mobile (just under 768px)
+$tablet-min: 768px; // lower bound of tablet (inclusive)
+$tablet-max: 1024px; // upper bound of tablet (inclusive)
+$desktop-min: 1024.02px; // lower bound of desktop (just over 1024px)
+
+@mixin mobile {
+  @media (max-width: $mobile-max) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: $tablet-min) and (max-width: $tablet-max) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $desktop-min) {
+    @content;
+  }
+}

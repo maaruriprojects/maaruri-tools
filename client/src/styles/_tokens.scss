@@ -1,0 +1,105 @@
+// Design tokens — Maaruri Tools
+//
+// CSS custom properties (not Sass variables) for every token that does NOT
+// change between light and dark theme — spacing, typography, border-radius,
+// and the handful of theme-invariant colors (the Readout, the accent, and
+// the ad system's fixed tokens). Theme switching happens at runtime, so
+// these must be real custom properties even though their values never vary.
+//
+// Colors that DO change between themes (background, surface, text, border,
+// semantic colors) live in theme.scss instead, as the light/dark value sets.
+//
+// Every value here traces back to docs/design/02-color-typography.md
+// (typography, theme-invariant colors) and docs/design/04-page-layout-system.md
+// (spacing) and docs/design/06-component-visual-design.md (radius). Nothing
+// below is a new decision — this file is a transcription.
+
+:root {
+  // ---------------------------------------------------------------------
+  // Theme-invariant color (doc 02 §3 — "the Readout"). These never change
+  // between light/dark: the Readout is a permanently dark backing "like an
+  // LCD display that stays dark regardless of room lighting."
+  // ---------------------------------------------------------------------
+  --color-readout-bg: #262b2e; // Readout Ink
+  --color-readout-text: #f8f9f9; // Readout Paper
+  --color-accent: #e8a33d; // Indicator Amber — only ever on --color-readout-bg
+
+  // ---------------------------------------------------------------------
+  // Ad-system tokens. Specified directly by the ad system (a later phase)
+  // as fixed, theme-invariant values — ad creatives assume a neutral
+  // surface regardless of site theme, so these are intentionally NOT part
+  // of the light/dark value sets in theme.scss.
+  //
+  // Reconciliation with the Phase 1 palette: these are close to, but
+  // deliberately distinct from, doc 02's --color-border (#D6DADC light /
+  // #3A4046 dark) and --color-surface (#F8F9F9 light / #24282B dark).
+  // --color-border / --color-surface remain the theme-aware, general-purpose
+  // tokens for everything else (cards, dividers, panels); the two tokens
+  // below are reserved for ad units specifically, exactly as the ad system
+  // already specifies, and are not substitutes for the Phase 1 tokens.
+  // ---------------------------------------------------------------------
+  --color-border-subtle: #dcdcdc;
+  --color-surface-placeholder: #fafafa;
+
+  // ---------------------------------------------------------------------
+  // Spacing scale (doc 04 §1) — 4px base unit, 8 steps.
+  // ---------------------------------------------------------------------
+  --space-xs: 0.25rem; // 4px
+  --space-sm: 0.5rem; // 8px
+  --space-md: 1rem; // 16px
+  --space-lg: 1.5rem; // 24px
+  --space-xl: 2rem; // 32px
+  --space-2xl: 3rem; // 48px
+  --space-3xl: 4rem; // 64px
+  --space-4xl: 6rem; // 96px
+
+  // ---------------------------------------------------------------------
+  // Typography (doc 02 §4) — font families and the 8-step type scale.
+  // ---------------------------------------------------------------------
+  --font-display: 'IBM Plex Sans Condensed', sans-serif; // titles, headings only
+  --font-body: 'Public Sans', sans-serif; // body copy, labels, all UI chrome
+  --font-mono: 'IBM Plex Mono', monospace; // Readout values/units only
+
+  --type-caption-size: 0.75rem; // 12px
+  --type-caption-weight: 400;
+  --type-caption-line-height: 1.4;
+
+  --type-body-sm-size: 0.875rem; // 14px
+  --type-body-sm-weight: 400;
+  --type-body-sm-line-height: 1.5;
+
+  --type-body-size: 1rem; // 16px
+  --type-body-weight: 400;
+  --type-body-line-height: 1.6;
+
+  --type-label-size: 1rem; // 16px
+  --type-label-weight: 600;
+  --type-label-line-height: 1.5;
+
+  --type-subhead-size: 1.25rem; // 20px
+  --type-subhead-weight: 500;
+  --type-subhead-line-height: 1.3;
+
+  --type-heading-size: 1.75rem; // 28px
+  --type-heading-weight: 600;
+  --type-heading-line-height: 1.25;
+
+  --type-display-size: 2.5rem; // 40px
+  --type-display-weight: 600;
+  --type-display-line-height: 1.15;
+
+  // Base size; doc 02 notes this scales to 3rem/4rem (64px) on larger tools
+  // — that's a per-tool-page decision for later, not a second global token.
+  --type-readout-size: 3rem; // 48px
+  --type-readout-weight: 500;
+  --type-readout-line-height: 1.1;
+  --type-readout-letter-spacing: 0.02em;
+
+  // ---------------------------------------------------------------------
+  // Border-radius scale (doc 06 §0). No 0 (flat) or pill radius anywhere
+  // — both explicitly rejected in doc 01.
+  // ---------------------------------------------------------------------
+  --radius-sm: 6px; // buttons, inputs, badges
+  --radius-md: 10px; // cards, tool/category tiles
+  --radius-lg: 12px; // logo containers (doc 03, unchanged)
+}

@@ -1,0 +1,70 @@
+// Bootstrap 5 Sass variable overrides — Maaruri Tools
+//
+// Configures Bootstrap with our design tokens' light-theme values (real Sass
+// colors/numbers, not var(--color-*) references) so it stops fighting our
+// palette with its own defaults. Real values are required here, not custom
+// property references: Bootstrap runs actual Sass color functions
+// (rgba(), to-rgb(), tint-color(), color-contrast()...) on several of these
+// variables internally, which only work on real Sass colors, not `var()`.
+//
+// Runtime light/dark reactivity for Bootstrap's own generated `--bs-*`
+// custom properties is handled separately, in theme.scss, which re-points
+// the ones that matter at our tokens after Bootstrap's CSS is emitted.
+//
+// Every value below is the same one used in theme.scss / _tokens.scss —
+// see those files for the doc references. $spacers replaces Bootstrap's
+// default numeric scale entirely, per docs/design/04-page-layout-system.md
+// §1 ("Day 7 is a transcription of this table into the map").
+
+@forward 'bootstrap/scss/bootstrap' with (
+  // Theme colors (doc 02). Primary uses ink, not the accent — doc 06:
+  // "Primary buttons are not amber... using it here would make amber mean
+  // 'clickable' everywhere instead of 'this is a live reading'."
+  $primary: #262b2e,
+  // --color-text-primary
+  $secondary: #4c5a62,
+  // --color-text-secondary
+  $success: #2a7150,
+  // --color-success
+  $warning: #93521f,
+  // --color-warning
+  $danger: #b23b3b,
+  // --color-error
+  $info: #33608f,
+  // --color-info
+  // Body + border (doc 02 §1)
+  $body-bg: #e6e8ea,
+  // --color-bg
+  $body-color: #262b2e,
+  // --color-text-primary
+  $border-color: #d6dadc,
+  // --color-border
+  // Typography (doc 02 §4)
+  $font-family-base: ('Public Sans', sans-serif),
+  $font-family-monospace: ('IBM Plex Mono', monospace),
+  $headings-font-family: ('IBM Plex Sans Condensed', sans-serif),
+  $font-size-base: 1rem,
+
+  // Radius (doc 06 §0). Bootstrap only exposes 3 general-purpose steps;
+  // per-component fine-tuning (e.g. buttons specifically wanting --radius-sm
+  // rather than the base radius) is Day 8/14 work, once those components
+  // are actually built.
+  $border-radius: 10px,
+  // --radius-md
+  $border-radius-sm: 6px,
+  // --radius-sm
+  $border-radius-lg: 12px,
+  // --radius-lg
+  // Spacing scale (doc 04 §1) — replaces Bootstrap's default 0–5 numeric
+  // keys so utilities like .p-md / .gap-lg emit this scale directly.
+  $spacers: (
+      'xs': 0.25rem,
+      'sm': 0.5rem,
+      'md': 1rem,
+      'lg': 1.5rem,
+      'xl': 2rem,
+      '2xl': 3rem,
+      '3xl': 4rem,
+      '4xl': 6rem
+    )
+);
