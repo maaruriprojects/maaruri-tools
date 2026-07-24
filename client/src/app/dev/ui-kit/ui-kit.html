@@ -103,3 +103,18 @@
     </app-card>
   </div>
 </section>
+
+<section>
+  <h2>AppPagination — a mock 45-item list, 10 per page</h2>
+  <ul class="mock-list">
+    @for (item of mockListPageItems(); track item) {
+      <li>{{ item }}</li>
+    }
+  </ul>
+  <app-pagination
+    [currentPage]="mockListPage()"
+    [totalItems]="mockListItems.length"
+    [pageSize]="10"
+    (pageChange)="onMockListPageChange($event)"
+  />
+</section>

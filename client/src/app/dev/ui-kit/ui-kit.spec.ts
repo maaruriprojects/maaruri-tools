@@ -180,4 +180,35 @@ describe('UiKit', () => {
 
     expect(fixture.nativeElement.textContent).toContain('Digital Clock (time-date-tools)');
   });
+
+  it('paginates the mock 45-item list 10 per page, driven entirely by AppPagination', () => {
+    const fixture = createUiKit();
+
+    const items = () => fixture.nativeElement.querySelectorAll('.mock-list li');
+    expect(items()).toHaveLength(10);
+    expect(items()[0].textContent).toBe('Item 1');
+    expect(items()[9].textContent).toBe('Item 10');
+
+    const nextButton = fixture.nativeElement.querySelector(
+      '[aria-label="Next page"]',
+    ) as HTMLButtonElement;
+    nextButton.click();
+    fixture.detectChanges();
+
+    expect(items()[0].textContent).toBe('Item 11');
+    expect(items()[9].textContent).toBe('Item 20');
+
+    // Last page (45 items, 10/page) only has 5 items.
+    const pageButtons = (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>(
+      '.app-pagination__page',
+    );
+    const lastPageButton = Array.from(pageButtons).find(
+      (button) => button.textContent?.trim() === '5',
+    ) as HTMLButtonElement;
+    lastPageButton.click();
+    fixture.detectChanges();
+
+    expect(items()).toHaveLength(5);
+    expect(items()[4].textContent).toBe('Item 45');
+  });
 });

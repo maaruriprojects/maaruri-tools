@@ -35,3 +35,21 @@ section {
 .search-bar-demo {
   max-width: 360px;
 }
+
+// The mock list itself is entirely this demo page's doing — AppPagination
+// has no opinion on what's being paginated.
+.mock-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-xs);
+  max-width: 480px;
+  margin: 0 0 var(--space-sm);
+  padding: 0;
+  list-style: none;
+
+  li {
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+}

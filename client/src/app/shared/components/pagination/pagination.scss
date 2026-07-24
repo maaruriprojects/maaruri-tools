@@ -1,0 +1,60 @@
+// No docs/design spec exists for pagination — this reuses button.scss's
+// ghost-hover/active treatment and --radius-sm rather than inventing a new
+// visual language. Focus-visible ring is global (styles/_focus-visible.scss)
+// and not redefined here, same as every other shared component.
+
+.app-pagination {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.app-pagination__nav,
+.app-pagination__page {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 var(--space-sm);
+  border: none;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--type-body-sm-size);
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-border);
+  }
+
+  &:active:not(:disabled) {
+    background-color: color-mix(in srgb, var(--color-icon-muted) 20%, transparent);
+  }
+
+  &:disabled {
+    color: var(--color-icon-muted);
+    cursor: not-allowed;
+  }
+}
+
+// Current page — same fill AppButton's primary variant uses, so "this is
+// the active/selected one" reads consistently across the system.
+.app-pagination__page--current {
+  background-color: var(--color-text-primary);
+  color: var(--color-surface);
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-text-primary);
+  }
+}
+
+.app-pagination__ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  color: var(--color-text-secondary);
+}
