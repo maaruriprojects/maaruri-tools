@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { LOCALE_PARAM, ROUTE_SEGMENTS, TOOL_CATEGORY_SEGMENTS } from './core/config/route-paths';
+import { devRouteGuard } from './core/guards/dev-route.guard';
 import { DEFAULT_LOCALE } from './core/i18n/locale';
 
 // Every route lives under this segment (e.g. /en-us/...). Only one locale
@@ -10,6 +11,19 @@ export const routes: Routes = [
     path: '',
     pathMatch: 'full',
     redirectTo: `/${DEFAULT_LOCALE.code}`,
+  },
+  // Not locale-prefixed — an internal QA tool, not a content page. Gated
+  // by devRouteGuard behind the `devUiKit` feature flag (see
+  // src/environments/environment*.ts); off in production.
+  {
+    path: 'dev/ui-kit',
+    canActivate: [devRouteGuard],
+    loadComponent: () => import('./dev/ui-kit/ui-kit').then((m) => m.UiKit),
+    data: {
+      title: 'UI Kit',
+      breadcrumbLabel: 'UI Kit',
+      metaDescription: 'Internal visual QA page for shared components.',
+    },
   },
   {
     path: `:${LOCALE_PARAM}`,

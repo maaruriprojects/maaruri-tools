@@ -1,0 +1,22 @@
+<h1>{{ title() }}</h1>
+
+<section>
+  <h2>AppButton</h2>
+  <div class="row">
+    @for (variant of buttonVariants; track variant) {
+      <app-button [variant]="variant">{{ variant }}</app-button>
+    }
+  </div>
+  <div class="row">
+    <app-button [variant]="'primary'" [disabled]="true">disabled</app-button>
+  </div>
+</section>
+
+<section>
+  <h2>AppBadge</h2>
+  <div class="row">
+    @for (color of badgeColors; track color) {
+      <app-badge [text]="color" [color]="color" />
+    }
+  </div>
+</section>

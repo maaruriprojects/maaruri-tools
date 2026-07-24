@@ -1,0 +1,17 @@
+:host {
+  display: block;
+  padding: var(--space-lg);
+  font-family: var(--font-body);
+  color: var(--color-text-primary);
+}
+
+section {
+  margin-bottom: var(--space-xl);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}

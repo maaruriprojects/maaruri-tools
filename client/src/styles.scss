@@ -1,7 +1,8 @@
 // Global styles. Order matters: tokens first (establishes the custom
 // property vocabulary), then Bootstrap (configured with real Sass values —
-// see _bootstrap-overrides.scss for why), then theme last, so its
-// light/dark values and --bs-* bridge aliases win the cascade.
+// see _bootstrap-overrides.scss for why), then theme, so its light/dark
+// values and --bs-* bridge aliases win the cascade, then focus-visible last.
 @use 'styles/tokens';
 @use 'styles/bootstrap-overrides';
 @use 'styles/theme';
+@use 'styles/focus-visible';
