@@ -1,0 +1,20 @@
+// Doc04 §3/§4: 300px ad-zone column, sticky within its scroll range, shown
+// only at desktop widths (below that there isn't reliably enough width for
+// a fixed sidebar without squeezing the reading column). The consumer
+// places this alongside its content in its own flex/grid row — this
+// component only owns its own width and sticky behavior, not the
+// surrounding layout.
+@use '../../../styles/breakpoints' as bp;
+
+.app-sidebar {
+  display: none;
+
+  @include bp.desktop {
+    display: block;
+    flex-shrink: 0;
+    align-self: flex-start;
+    position: sticky;
+    top: var(--space-md);
+    width: 300px;
+  }
+}

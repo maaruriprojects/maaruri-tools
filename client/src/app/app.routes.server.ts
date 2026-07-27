@@ -61,6 +61,21 @@ export const serverRoutes: ServerRoute[] = [
     getPrerenderParams: getLocaleParams,
   },
   {
+    path: `${LOCALE_PATH}/privacy`,
+    renderMode: RenderMode.Prerender,
+    getPrerenderParams: getLocaleParams,
+  },
+  {
+    path: `${LOCALE_PATH}/terms`,
+    renderMode: RenderMode.Prerender,
+    getPrerenderParams: getLocaleParams,
+  },
+  {
+    path: `${LOCALE_PATH}/sitemap`,
+    renderMode: RenderMode.Prerender,
+    getPrerenderParams: getLocaleParams,
+  },
+  {
     path: `${LOCALE_PATH}/error`,
     renderMode: RenderMode.Prerender,
     getPrerenderParams: getLocaleParams,

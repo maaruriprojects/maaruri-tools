@@ -1,0 +1,11 @@
+<app-header />
+
+<div class="app-shell__breadcrumb-row">
+  <app-breadcrumb [items]="breadcrumbService.trail()" />
+</div>
+
+<main class="app-shell__content">
+  <router-outlet />
+</main>
+
+<app-footer />

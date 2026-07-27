@@ -90,6 +90,33 @@ export const routes: Routes = [
         },
       },
       {
+        path: ROUTE_SEGMENTS.privacy,
+        loadComponent: () => import('./features/privacy/privacy').then((m) => m.Privacy),
+        data: {
+          title: 'Privacy Policy',
+          breadcrumbLabel: 'Privacy Policy',
+          metaDescription: 'How this site handles data and privacy.',
+        },
+      },
+      {
+        path: ROUTE_SEGMENTS.terms,
+        loadComponent: () => import('./features/terms/terms').then((m) => m.Terms),
+        data: {
+          title: 'Terms of Service',
+          breadcrumbLabel: 'Terms of Service',
+          metaDescription: 'The terms governing use of this site.',
+        },
+      },
+      {
+        path: ROUTE_SEGMENTS.sitemap,
+        loadComponent: () => import('./features/sitemap/sitemap').then((m) => m.Sitemap),
+        data: {
+          title: 'Sitemap',
+          breadcrumbLabel: 'Sitemap',
+          metaDescription: 'Every page and tool category on this site, in one place.',
+        },
+      },
+      {
         path: TOOL_CATEGORY_SEGMENTS.timeDateTools,
         loadChildren: () =>
           import('./features/tools/time-date-tools/time-date-tools.routes').then(

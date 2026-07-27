@@ -10,6 +10,9 @@ export const ROUTE_SEGMENTS = {
   about: 'about',
   contact: 'contact',
   opportunities: 'opportunities',
+  privacy: 'privacy',
+  terms: 'terms',
+  sitemap: 'sitemap',
   // Fatal-error redirect target (GlobalErrorHandler) — distinct from the
   // '**' wildcard 404, since "page not found" and "the app crashed" warrant
   // different messaging even though both render ErrorPage.

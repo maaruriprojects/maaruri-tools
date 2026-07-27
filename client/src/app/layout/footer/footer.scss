@@ -1,0 +1,75 @@
+// Shared footer (doc04): category index, site links, legal bar.
+@use '../../../styles/breakpoints' as bp;
+
+.app-footer {
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.app-footer__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg);
+
+  @include bp.mobile {
+    padding: var(--space-lg) var(--space-md);
+  }
+}
+
+.app-footer__columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xl);
+  margin-bottom: var(--space-xl);
+}
+
+.app-footer__heading {
+  margin: 0 0 var(--space-sm);
+  font-family: var(--font-display);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  color: var(--color-text-primary);
+}
+
+.app-footer__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  a {
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+    font-size: var(--type-body-sm-size);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-text-primary);
+      text-decoration: underline;
+    }
+  }
+}
+
+.app-footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-md);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border);
+  font-family: var(--font-body);
+  font-size: var(--type-caption-size);
+  color: var(--color-text-secondary);
+}
+
+.app-footer__legal-link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--color-text-primary);
+    text-decoration: underline;
+  }
+}

@@ -1,0 +1,57 @@
+// Simple/Static template (doc04 Template C) — single reading column,
+// 720px cap, same as About/Contact/Privacy/Terms.
+
+.sitemap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-xl) 0;
+}
+
+.sitemap__title {
+  margin: 0 0 var(--space-sm);
+  font-family: var(--font-display);
+  font-size: var(--type-heading-size);
+  font-weight: var(--type-heading-weight);
+  line-height: var(--type-heading-line-height);
+  color: var(--color-text-primary);
+}
+
+.sitemap__tagline {
+  margin: 0 0 var(--space-xl);
+  font-family: var(--font-body);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+  color: var(--color-text-secondary);
+}
+
+.sitemap__section {
+  margin-bottom: var(--space-xl);
+}
+
+.sitemap__heading {
+  margin: 0 0 var(--space-sm);
+  font-family: var(--font-display);
+  font-size: var(--type-subhead-size);
+  font-weight: var(--type-subhead-weight);
+  line-height: var(--type-subhead-line-height);
+  color: var(--color-text-primary);
+}
+
+.sitemap__list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-xs) var(--space-lg);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-text-primary);
+      text-decoration: underline;
+    }
+  }
+}

@@ -1,25 +1,44 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Routes, provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { App } from './app';
 import { LoadingService } from './core/loading/loading.service';
 import { ToastService } from './core/toast/toast.service';
+import type { SearchIndexEntry } from './shared/models/search-index-entry';
 
 describe('App', () => {
+  const sampleSearchEntries: SearchIndexEntry[] = [];
+  let httpMock: HttpTestingController;
+
   beforeEach(async () => {
     sessionStorage.clear();
     document.documentElement.removeAttribute('data-theme');
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideRouter([])],
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
+    httpMock.verify();
     sessionStorage.clear();
     document.documentElement.removeAttribute('data-theme');
   });
+
+  // App now renders AppShell -> AppHeader, which injects SearchIndexService
+  // (a real httpResource() request) — same reason home.spec.ts/ui-kit.spec.ts
+  // flush search-index.json before asserting on anything rendered.
+  function createApp() {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    httpMock.expectOne((req) => req.url.endsWith('search-index.json')).flush(sampleSearchEntries);
+    fixture.detectChanges();
+    return fixture;
+  }
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(App);
@@ -27,14 +46,15 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('toggles the whole page between light and dark via the test button', () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
+  it('toggles the whole page between light and dark via the header theme toggle', () => {
+    const fixture = createApp();
     TestBed.tick();
 
     expect(document.documentElement.getAttribute('data-theme')).toBeNull();
 
-    const button = (fixture.nativeElement as HTMLElement).querySelector('button.theme-toggle');
+    const button = (fixture.nativeElement as HTMLElement).querySelector(
+      'button.app-header__theme-toggle',
+    );
     (button as HTMLButtonElement).click();
     fixture.detectChanges();
     TestBed.tick();
@@ -43,8 +63,7 @@ describe('App', () => {
   });
 
   it('renders the global loading overlay, driven by LoadingService', () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
+    const fixture = createApp();
     TestBed.tick();
 
     const overlay = (fixture.nativeElement as HTMLElement).querySelector('app-loading-overlay');
@@ -55,8 +74,7 @@ describe('App', () => {
   });
 
   it('renders the toast container, wired to ToastService', () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
+    const fixture = createApp();
     TestBed.tick();
 
     expect((fixture.nativeElement as HTMLElement).querySelector('app-toast')).toBeTruthy();
@@ -70,8 +88,7 @@ describe('App', () => {
   });
 
   it('renders the breadcrumb container, wired to BreadcrumbService', () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
+    const fixture = createApp();
     TestBed.tick();
 
     expect((fixture.nativeElement as HTMLElement).querySelector('app-breadcrumb')).toBeTruthy();
@@ -82,6 +99,8 @@ describe('App', () => {
 class TestPage {}
 
 describe('App breadcrumb wiring, end to end through real navigation', () => {
+  const sampleSearchEntries: SearchIndexEntry[] = [];
+
   const breadcrumbRoutes: Routes = [
     {
       path: 'en-us',
@@ -99,23 +118,29 @@ describe('App breadcrumb wiring, end to end through real navigation', () => {
     },
   ];
 
+  let httpMock: HttpTestingController;
+
   beforeEach(() => {
     sessionStorage.clear();
     document.documentElement.removeAttribute('data-theme');
   });
 
   afterEach(() => {
+    httpMock?.verify();
     sessionStorage.clear();
     document.documentElement.removeAttribute('data-theme');
   });
 
   it('shows a correct, clickable 3-level trail for a nested tool-shell route', async () => {
     await TestBed.configureTestingModule({
-      providers: [provideRouter(breadcrumbRoutes)],
+      providers: [provideRouter(breadcrumbRoutes), provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
+    httpMock = TestBed.inject(HttpTestingController);
     await RouterTestingHarness.create('/en-us/health-fitness/bmi-calculator');
 
     const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    httpMock.expectOne((req) => req.url.endsWith('search-index.json')).flush(sampleSearchEntries);
     fixture.detectChanges();
 
     const el = fixture.nativeElement as HTMLElement;

@@ -1,0 +1,39 @@
+<header class="app-header">
+  <div class="app-header__inner">
+    <a class="app-header__logo" [routerLink]="homeLink">{{ siteName }}</a>
+
+    <details class="app-header__categories" #categoriesMenu>
+      <summary class="app-header__categories-trigger">Categories</summary>
+      <nav class="app-header__categories-panel" aria-label="Tool categories">
+        @for (category of categories; track category.segment) {
+          <a
+            class="app-header__categories-link"
+            [routerLink]="categoryLink(category.segment)"
+            (click)="categoriesMenu.removeAttribute('open')"
+          >
+            {{ category.title }}
+          </a>
+        }
+      </nav>
+    </details>
+
+    <div class="app-header__search">
+      <app-search-bar
+        [entries]="searchIndexService.entries()"
+        placeholder="Search tools..."
+        (toolSelected)="onToolSelected($event)"
+      />
+    </div>
+
+    <button
+      type="button"
+      class="app-header__theme-toggle"
+      (click)="themeService.toggle()"
+      [attr.aria-label]="
+        themeService.theme() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
+      "
+    >
+      {{ themeService.theme() === 'dark' ? '☀' : '☾' }}
+    </button>
+  </div>
+</header>

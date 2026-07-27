@@ -1,0 +1,25 @@
+// Doc04 §3's outer 1440px frame, applied here so every routed page gets it
+// for free — pages that already set their own inner max-width (e.g. Home,
+// doc05) simply nest an inert duplicate inside this one.
+@use '../../../styles/breakpoints' as bp;
+
+.app-shell__breadcrumb-row {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--space-sm) var(--space-lg) 0;
+
+  @include bp.mobile {
+    padding: var(--space-sm) var(--space-md) 0;
+  }
+}
+
+.app-shell__content {
+  display: block;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg);
+
+  @include bp.mobile {
+    padding: var(--space-lg) var(--space-md);
+  }
+}

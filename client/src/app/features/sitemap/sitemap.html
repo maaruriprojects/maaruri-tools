@@ -1,0 +1,26 @@
+<div class="sitemap">
+  <h1 class="sitemap__title">{{ title() }}</h1>
+  <p class="sitemap__tagline">{{ metaDescription() }}</p>
+
+  <section class="sitemap__section" aria-label="Site pages">
+    <h2 class="sitemap__heading">Site</h2>
+    <ul class="sitemap__list">
+      @for (link of siteLinks; track link.label) {
+        <li>
+          <a [routerLink]="link.path">{{ link.label }}</a>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section class="sitemap__section" aria-label="Tool categories">
+    <h2 class="sitemap__heading">Categories</h2>
+    <ul class="sitemap__list">
+      @for (link of categoryLinks; track link.label) {
+        <li>
+          <a [routerLink]="link.path">{{ link.label }}</a>
+        </li>
+      }
+    </ul>
+  </section>
+</div>

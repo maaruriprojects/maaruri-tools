@@ -1,0 +1,126 @@
+// Control strip (doc01/doc04): [Logo] [Category ▾] [Jump-search…] [☾].
+// Focus-visible ring is global (styles/_focus-visible.scss) — not redefined
+// here, same convention every other interactive component follows.
+@use '../../../styles/breakpoints' as bp;
+
+.app-header {
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.app-header__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--space-sm) var(--space-lg);
+
+  @include bp.mobile {
+    flex-wrap: wrap;
+    padding: var(--space-sm) var(--space-md);
+  }
+}
+
+.app-header__logo {
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: var(--type-subhead-size);
+  font-weight: var(--type-subhead-weight);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+// Native <details>/<summary> disclosure — standards-based keyboard/a11y
+// support with no custom open/close state or click-outside handling needed.
+.app-header__categories {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.app-header__categories-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--type-body-sm-size);
+  cursor: pointer;
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &::after {
+    content: '▾';
+    color: var(--color-icon-muted);
+  }
+
+  &:hover {
+    border-color: var(--color-text-secondary);
+  }
+}
+
+.app-header__categories-panel {
+  position: absolute;
+  top: calc(100% + var(--space-xs));
+  left: 0;
+  z-index: 1200; // matches app-search-bar__dropdown — the other floating panel
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-dropdown);
+}
+
+.app-header__categories-link {
+  padding: var(--space-sm) var(--space-md);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--type-body-sm-size);
+  text-decoration: none;
+
+  &:hover {
+    background-color: var(--color-border);
+  }
+}
+
+.app-header__search {
+  flex: 1;
+  max-width: 480px;
+
+  @include bp.mobile {
+    order: 1;
+    flex-basis: 100%;
+    max-width: none;
+  }
+}
+
+.app-header__theme-toggle {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--color-text-secondary);
+  }
+}
