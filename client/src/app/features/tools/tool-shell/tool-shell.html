@@ -1,0 +1,18 @@
+@if (isLoading()) {
+  <div class="tool-shell__status">
+    <app-loading-spinner [size]="'lg'" />
+  </div>
+} @else {
+  @switch (tool()?.componentKey) {
+    @case ('DigitalClock') {
+      <app-digital-clock />
+    }
+    @default {
+      <app-tool-coming-soon
+        [title]="title()"
+        [metaDescription]="metaDescription()"
+        [toolSlug]="toolSlug()"
+      />
+    }
+  }
+}

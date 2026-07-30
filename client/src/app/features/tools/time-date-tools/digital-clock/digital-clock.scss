@@ -1,0 +1,176 @@
+// No docs/design spec covers a tool page's own layout yet (that's Template
+// A, doc04 — not built here) or a glassmorphism treatment specifically —
+// built from existing primitives instead of inventing new ones: the Readout
+// tokens (doc01 §"signature element") for the live digits, --shadow-dropdown
+// for elevation (the system's one "floating panel" shadow), --motion-*/
+// --ease-* for transitions. Indicator Amber is reserved for the seconds
+// segment only — the fastest-changing, most "live" part of the display —
+// per doc01's "amber marks a live/active value" rule, not applied to the
+// whole readout.
+@use '../../../../../styles/breakpoints' as bp;
+
+.digital-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg);
+  text-align: center;
+
+  @include bp.mobile {
+    padding: var(--space-lg) var(--space-md);
+    gap: var(--space-lg);
+  }
+}
+
+.digital-clock__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--type-heading-size);
+  font-weight: var(--type-heading-weight);
+  line-height: var(--type-heading-line-height);
+  color: var(--color-text-primary);
+}
+
+// Glassmorphism card: translucent surface + backdrop blur, hairline border,
+// the system's one floating-panel shadow.
+.digital-clock__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  width: 100%;
+  padding: var(--space-2xl) var(--space-xl);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: color-mix(in srgb, var(--color-surface) 72%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-dropdown);
+
+  // Full-screen mode: fill the viewport and center the content instead of
+  // sitting in the page's normal flow.
+  &:fullscreen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--color-bg);
+    border-radius: 0;
+  }
+
+  @include bp.mobile {
+    padding: var(--space-xl) var(--space-md);
+  }
+}
+
+.digital-clock__readout {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: var(--type-readout-size);
+  font-weight: var(--type-readout-weight);
+  line-height: var(--type-readout-line-height);
+  letter-spacing: var(--type-readout-letter-spacing);
+  color: var(--color-readout-text);
+  font-variant-numeric: tabular-nums;
+
+  @include bp.mobile {
+    font-size: 2.5rem;
+  }
+}
+
+.digital-clock__segment {
+  display: inline-block;
+  min-width: 2ch;
+  transition: color var(--motion-base) var(--ease-standard);
+}
+
+// The one live/changing value — Indicator Amber, same meaning it carries
+// everywhere else in this system ("this is live right now").
+.digital-clock__segment--seconds {
+  color: var(--color-accent);
+}
+
+.digital-clock__colon {
+  color: var(--color-icon-muted);
+  animation: digital-clock-blink 2s step-start infinite;
+}
+
+@keyframes digital-clock-blink {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.digital-clock__meridiem {
+  margin-left: var(--space-sm);
+  font-family: var(--font-body);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-label-weight);
+  color: var(--color-text-secondary);
+  align-self: center;
+}
+
+.digital-clock__date {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--type-subhead-size);
+  font-weight: var(--type-subhead-weight);
+  line-height: var(--type-subhead-line-height);
+  color: var(--color-text-primary);
+}
+
+.digital-clock__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  font-family: var(--font-body);
+  font-size: var(--type-body-sm-size);
+  color: var(--color-text-secondary);
+}
+
+.digital-clock__utc {
+  font-variant-numeric: tabular-nums;
+}
+
+.digital-clock__controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+// Same visual language as AppButton's ghost/secondary variants (border +
+// surface fill), with aria-pressed driving the "active" look instead of a
+// separate CSS-only :active state.
+.digital-clock__toggle {
+  padding: var(--space-xs) var(--space-md);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-family: var(--font-body);
+  font-size: var(--type-body-sm-size);
+  font-weight: var(--type-label-weight);
+  cursor: pointer;
+  transition:
+    border-color var(--motion-base) var(--ease-standard),
+    color var(--motion-base) var(--ease-standard),
+    background-color var(--motion-base) var(--ease-standard);
+
+  &:hover {
+    border-color: var(--color-text-secondary);
+    color: var(--color-text-primary);
+  }
+
+  &[aria-pressed='true'] {
+    border-color: var(--color-text-primary);
+    background-color: var(--color-text-primary);
+    color: var(--color-surface);
+  }
+}

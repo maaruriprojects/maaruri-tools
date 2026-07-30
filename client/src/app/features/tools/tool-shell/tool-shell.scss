@@ -1,0 +1,6 @@
+// Same centered-status pattern as home.scss's .home__status.
+.tool-shell__status {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-2xl) 0;
+}

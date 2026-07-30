@@ -7,7 +7,11 @@ import { TOOL_CATEGORY_SEGMENTS, ToolCategorySegment } from '../../core/config/r
  * so both can be proven end-to-end before the real registry lands.
  */
 export const TOOL_SLUGS_BY_CATEGORY: Readonly<Record<ToolCategorySegment, readonly string[]>> = {
-  [TOOL_CATEGORY_SEGMENTS.timeDateTools]: ['countdown-timer', 'timezone-converter'],
+  [TOOL_CATEGORY_SEGMENTS.timeDateTools]: [
+    'digital-clock',
+    'countdown-timer',
+    'timezone-converter',
+  ],
   [TOOL_CATEGORY_SEGMENTS.healthFitness]: ['bmi-calculator', 'calorie-counter'],
   [TOOL_CATEGORY_SEGMENTS.financeMoneyTools]: ['loan-calculator', 'currency-converter'],
   [TOOL_CATEGORY_SEGMENTS.workProductivity]: ['pomodoro-timer', 'word-counter'],

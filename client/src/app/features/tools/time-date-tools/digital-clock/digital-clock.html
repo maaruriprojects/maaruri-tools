@@ -1,0 +1,87 @@
+<section class="digital-clock" aria-labelledby="digital-clock-heading">
+  <h1 id="digital-clock-heading" class="digital-clock__heading">Digital Clock</h1>
+
+  <div class="digital-clock__card" #card>
+    <!-- Segmented into separate spans for the digit-group styling below —
+         aria-hidden because a screen reader reading each span in turn
+         ("zero nine colon four one") is worse than the single coherent
+         announcement the visually-hidden live region below provides instead. -->
+    <time
+      class="digital-clock__readout"
+      role="timer"
+      [attr.datetime]="isoTimestamp()"
+      aria-hidden="true"
+    >
+      <span class="digital-clock__segment">{{ now() | date: (is24Hour() ? 'HH' : 'hh') }}</span>
+      <span class="digital-clock__colon">:</span>
+      <span class="digital-clock__segment">{{ now() | date: 'mm' }}</span>
+      @if (showSeconds()) {
+        <span class="digital-clock__colon">:</span>
+        <span class="digital-clock__segment digital-clock__segment--seconds">{{
+          now() | date: 'ss'
+        }}</span>
+      }
+      @if (!is24Hour()) {
+        <span class="digital-clock__meridiem">{{ now() | date: 'a' }}</span>
+      }
+    </time>
+
+    <!-- Rounded to the minute, so this text (and the live region it feeds)
+         only actually changes once a minute — not every second, which
+         would make a screen reader unusable. -->
+    <p class="visually-hidden" aria-live="polite">
+      {{ now() | date: (is24Hour() ? 'HH:mm' : 'h:mm a') }}
+    </p>
+
+    <p class="digital-clock__date">{{ now() | date: 'EEEE, MMMM d, y' }}</p>
+
+    <div class="digital-clock__meta">
+      <span class="digital-clock__timezone">{{ timeZoneName }} · UTC{{ utcOffset() }}</span>
+      @if (showUtc()) {
+        <span class="digital-clock__utc">
+          UTC {{ now() | date: (is24Hour() ? 'HH:mm:ss' : 'hh:mm:ss a') : 'UTC' }}
+        </span>
+      }
+    </div>
+  </div>
+
+  <div class="digital-clock__controls" role="group" aria-label="Clock display options">
+    <button
+      type="button"
+      class="digital-clock__toggle"
+      [attr.aria-pressed]="is24Hour()"
+      (click)="toggleFormat()"
+    >
+      {{ is24Hour() ? '24-Hour' : '12-Hour' }}
+    </button>
+
+    <button
+      type="button"
+      class="digital-clock__toggle"
+      [attr.aria-pressed]="showSeconds()"
+      (click)="toggleSeconds()"
+    >
+      Seconds
+    </button>
+
+    <button
+      type="button"
+      class="digital-clock__toggle"
+      [attr.aria-pressed]="showUtc()"
+      (click)="toggleUtc()"
+    >
+      UTC Time
+    </button>
+
+    @if (fullscreenSupported) {
+      <button
+        type="button"
+        class="digital-clock__toggle"
+        [attr.aria-pressed]="isFullscreen()"
+        (click)="toggleFullscreen()"
+      >
+        {{ isFullscreen() ? 'Exit Full Screen' : 'Full Screen' }}
+      </button>
+    }
+  </div>
+</section>
