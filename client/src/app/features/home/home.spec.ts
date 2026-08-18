@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
+import type { SearchIndexEntry } from '../../shared/models/search-index-entry';
 import type { ToolMeta } from '../../shared/models/tool-meta';
 import { Home } from './home';
 
@@ -26,12 +28,17 @@ describe('Home', () => {
     },
   ];
 
+  const sampleEntries: SearchIndexEntry[] = [
+    { slug: 'digital-clock', title: 'Digital Clock', category: 'time-date-tools' },
+    { slug: 'bmi-calculator', title: 'BMI Calculator', category: 'health-fitness' },
+  ];
+
   let httpMock: HttpTestingController;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Home],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
     }).compileComponents();
     httpMock = TestBed.inject(HttpTestingController);
   });
@@ -39,6 +46,10 @@ describe('Home', () => {
   afterEach(() => {
     httpMock.verify();
   });
+
+  function flushSearchIndex(): void {
+    httpMock.expectOne((req) => req.url.endsWith('search-index.json')).flush(sampleEntries);
+  }
 
   it('shows a loading state before the registry resolves', () => {
     const fixture = TestBed.createComponent(Home);
@@ -49,6 +60,7 @@ describe('Home', () => {
     expect(text).toContain('Loading tools');
 
     httpMock.expectOne((req) => req.url.endsWith('tool-registry.json')).flush(sampleTools);
+    flushSearchIndex();
   });
 
   it('renders the tool titles once the registry resolves', async () => {
@@ -57,6 +69,7 @@ describe('Home', () => {
     TestBed.tick();
 
     httpMock.expectOne((req) => req.url.endsWith('tool-registry.json')).flush(sampleTools);
+    flushSearchIndex();
     await fixture.whenStable();
     fixture.detectChanges();
 
@@ -73,6 +86,7 @@ describe('Home', () => {
     httpMock
       .expectOne((req) => req.url.endsWith('tool-registry.json'))
       .flush('server error', { status: 500, statusText: 'Internal Server Error' });
+    flushSearchIndex();
     await fixture.whenStable();
     fixture.detectChanges();
 

@@ -1,4 +1,14 @@
-import { Component, ElementRef, computed, inject, input, output, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  ElementRef,
+  afterNextRender,
+  computed,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { debounceTime, fromEvent } from 'rxjs';
 import { AppBadge } from '../badge/badge';
@@ -33,6 +43,7 @@ let nextInstanceId = 0;
 })
 export class AppSearchBar {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly instanceId = nextInstanceId++;
 
   readonly entries = input<readonly SearchIndexEntry[]>([]);
@@ -80,13 +91,19 @@ export class AppSearchBar {
   });
 
   constructor() {
-    fromEvent<MouseEvent>(document, 'click')
-      .pipe(takeUntilDestroyed())
-      .subscribe((event) => {
-        if (!this.elementRef.nativeElement.contains(event.target as Node)) {
-          this.close();
-        }
-      });
+    // afterNextRender only ever runs in the browser (never during SSR
+    // prerendering), which is what this needs: `document` doesn't exist on
+    // the server, and this outside-click listener has no useful SSR
+    // behavior anyway.
+    afterNextRender(() => {
+      fromEvent<MouseEvent>(document, 'click')
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((event) => {
+          if (!this.elementRef.nativeElement.contains(event.target as Node)) {
+            this.close();
+          }
+        });
+    });
   }
 
   protected optionId(index: number): string {

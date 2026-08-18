@@ -1,0 +1,36 @@
+<div class="home">
+  <section class="home-hero">
+    <h1 class="home-hero__title">{{ title() }}</h1>
+    <p class="home-hero__subtitle">{{ metaDescription() }}</p>
+
+    <div class="home-hero__search">
+      <app-search-bar
+        [entries]="searchIndexService.entries()"
+        [placeholder]="'Search tools...'"
+        (toolSelected)="onToolSelected($event)"
+      />
+    </div>
+  </section>
+
+  <section class="home-tools">
+    <h2 class="home-tools__heading">All tools</h2>
+
+    @if (toolRegistry.isLoading()) {
+      <p class="home-tools__status">Loading tools…</p>
+    } @else if (toolRegistry.error(); as error) {
+      <p class="home-tools__status home-tools__status--error">
+        Couldn't load tools: {{ error.message }}
+      </p>
+    } @else {
+      <div class="home-tools__grid">
+        @for (tool of toolRegistry.tools(); track tool.slug) {
+          <app-card
+            [title]="tool.title"
+            [description]="tool.shortDescription"
+            [link]="toolLink(tool)"
+          />
+        }
+      </div>
+    }
+  </section>
+</div>
