@@ -1,0 +1,22 @@
+<div class="app-text-input">
+  <label class="app-text-input__label" [for]="id()">{{ label() }}@if (required()) { <span class="app-text-input__required" aria-hidden="true">*</span> }</label>
+  <input
+    class="app-text-input__field"
+    [id]="id()"
+    [type]="type()"
+    [value]="value()"
+    [placeholder]="placeholder()"
+    [disabled]="disabled()"
+    [required]="required()"
+    [attr.inputmode]="inputmode()"
+    [attr.aria-invalid]="error() ? 'true' : null"
+    [attr.aria-describedby]="describedBy()"
+    (input)="value.set($any($event.target).value)"
+  />
+  @if (hint() && !error()) {
+    <p class="app-text-input__hint" [id]="hintId()">{{ hint() }}</p>
+  }
+  @if (error()) {
+    <p class="app-text-input__error" [id]="errorId()">{{ error() }}</p>
+  }
+</div>

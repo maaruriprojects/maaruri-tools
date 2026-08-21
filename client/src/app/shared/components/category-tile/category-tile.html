@@ -1,0 +1,11 @@
+<a
+  class="app-category-tile"
+  [routerLink]="['/', locale, categorySegment()]"
+  [style.--tile-category-color]="categoryColorVar()"
+>
+  <app-icon [name]="icon()" [size]="40" />
+  <div class="app-category-tile__content">
+    <span class="app-category-tile__title">{{ title() }}</span>
+    <span class="app-category-tile__count">{{ toolCount() }} tools</span>
+  </div>
+</a>

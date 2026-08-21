@@ -105,6 +105,110 @@
 </section>
 
 <section>
+  <h2>AppToolTile — grid</h2>
+  <div class="card-grid">
+    <app-tool-tile
+      [tool]="demoTool"
+      [link]="['/', 'en-us', 'health-fitness', 'bmi-calculator']"
+    />
+  </div>
+</section>
+
+<section>
+  <h2>AppToolTile — compact</h2>
+  <div class="row">
+    <app-tool-tile
+      [tool]="demoTool"
+      [layout]="'compact'"
+      [link]="['/', 'en-us', 'health-fitness', 'bmi-calculator']"
+    />
+  </div>
+</section>
+
+<section>
+  <h2>AppCategoryTile</h2>
+  <div class="card-grid">
+    <app-category-tile
+      [categorySegment]="categoryTileDemo.segment"
+      [title]="categoryTileDemo.title"
+      [toolCount]="categoryTileDemo.toolCount"
+      [icon]="categoryTileDemo.icon"
+    />
+  </div>
+</section>
+
+<section>
+  <h2>Form Controls</h2>
+  <div class="form-controls-demo">
+    <app-text-input
+      [label]="'Height'"
+      [placeholder]="'Enter your height'"
+      [hint]="'In centimeters'"
+      [(value)]="textInputValue"
+    />
+    <app-text-input
+      [label]="'Weight'"
+      [error]="'Weight is required'"
+      [required]="true"
+    />
+    <app-text-input
+      [label]="'Disabled'"
+      [disabled]="true"
+      [value]="'Cannot edit'"
+    />
+    <app-select-control
+      [label]="'Unit'"
+      [options]="selectOptions"
+      [(value)]="selectValue"
+    />
+    <app-textarea-control
+      [label]="'Notes'"
+      [placeholder]="'Write something...'"
+      [rows]="4"
+      [hint]="'Max 500 characters'"
+      [maxLength]="500"
+      [(value)]="textareaValue"
+    />
+  </div>
+</section>
+
+<section>
+  <h2>AppModal</h2>
+  <div class="row">
+    <app-button [variant]="'secondary'" (click)="openModal()">Open modal</app-button>
+  </div>
+  <app-modal [open]="modalOpen()" [title]="'Demo Modal'" (closed)="closeModal()">
+    <p>This is a demo modal dialog. Click outside or press Escape to close.</p>
+  </app-modal>
+</section>
+
+<section>
+  <h2>AppEmptyState</h2>
+  <app-empty-state
+    [message]="'No tools match your search.'"
+    [actionLabel]="'Browse all tools'"
+    [icon]="'inbox'"
+  />
+</section>
+
+<section>
+  <h2>AppCopyButton</h2>
+  <div class="row">
+    <app-copy-button [value]="'22.4'" [label]="'Copy result'" (copied)="onCopyCopied()" />
+    <app-copy-button [value]="'hello-world'" />
+  </div>
+</section>
+
+<section>
+  <h2>Ad Placeholders</h2>
+  <div class="ad-demo">
+    <app-ad-banner />
+    <app-ad-rectangle />
+    <app-ad-in-article />
+  </div>
+</section>
+
+<section>
   <h2>AppPagination — a mock 45-item list, 10 per page</h2>
   <ul class="mock-list">
     @for (item of mockListPageItems(); track item) {

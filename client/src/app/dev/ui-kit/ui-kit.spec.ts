@@ -50,8 +50,8 @@ describe('UiKit', () => {
     const fixture = createUiKit();
 
     const el = fixture.nativeElement as HTMLElement;
-    // 3 variants + 1 disabled + throw-error + slow + fast + 4 severities + 1 failed-request
-    expect(el.querySelectorAll('app-button')).toHaveLength(12);
+    // 3 variants + 1 disabled + throw-error + slow + fast + 4 severities + 1 failed-request + 1 modal-open + 1 empty-state-action
+    expect(el.querySelectorAll('app-button')).toHaveLength(14);
     // 5 severities + 1 "New" badge inside the standalone card's projected content
     expect(el.querySelectorAll('app-badge')).toHaveLength(6);
     expect(el.querySelectorAll('app-loading-spinner')).toHaveLength(2); // sm + lg preview

@@ -1,0 +1,92 @@
+@use '../../../../styles/breakpoints' as *;
+
+.app-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: app-modal-fade-in 150ms var(--ease-out-snap);
+}
+
+.app-modal {
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow: auto;
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-dropdown);
+  outline: none;
+  animation: app-modal-slide-up 200ms var(--ease-out-snap);
+}
+
+.app-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.app-modal__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--type-subhead-size);
+  font-weight: var(--type-heading-weight);
+  line-height: var(--type-subhead-line-height);
+  color: var(--color-text-primary);
+}
+
+.app-modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-icon-muted);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-border);
+    color: var(--color-text-primary);
+  }
+}
+
+.app-modal__body {
+  padding: var(--space-lg);
+}
+
+// Mobile: slides up as a bottom sheet
+@include mobile {
+  .app-modal__backdrop {
+    align-items: flex-end;
+  }
+
+  .app-modal {
+    max-width: 100%;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+  }
+}
+
+@keyframes app-modal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes app-modal-slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-modal {
+    animation: app-modal-fade-in 150ms var(--ease-standard);
+  }
+}
