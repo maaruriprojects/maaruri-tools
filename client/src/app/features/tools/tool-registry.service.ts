@@ -23,4 +23,8 @@ export class ToolRegistryService {
   readonly tools = this.resource.value.asReadonly();
   readonly isLoading = this.resource.isLoading;
   readonly error = this.resource.error;
+
+  reload(): void {
+    this.resource.reload();
+  }
 }

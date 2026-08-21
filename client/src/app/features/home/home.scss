@@ -1,9 +1,5 @@
 @use '../../../styles/breakpoints' as bp;
 
-// Outer page frame per docs/design/04-page-layout-system.md §3: capped at
-// 1440px, centered, surrounding viewport filled by --color-bg rather than
-// content. No header/footer exist yet (see home.ts) so this is the whole
-// content zone for now.
 :host {
   display: block;
 }
@@ -18,16 +14,12 @@
   }
 }
 
-// Reading-column width per doc04 §3 — same 720px cap used everywhere else
-// centered prose appears.
 .home-hero {
-  max-width: 720px;
+  max-width: 960px;
   margin: 0 auto var(--space-2xl);
   text-align: center;
 }
 
-// Display step (doc02 §4) — "homepage hero only, used sparingly." This is
-// that one place.
 .home-hero__title {
   margin: 0 0 var(--space-sm);
   font-family: var(--font-display);
@@ -38,7 +30,8 @@
 }
 
 .home-hero__subtitle {
-  margin: 0 0 var(--space-lg);
+  max-width: 720px;
+  margin: 0 auto var(--space-lg);
   font-family: var(--font-body);
   font-size: var(--type-body-size);
   line-height: var(--type-body-line-height);
@@ -46,48 +39,180 @@
 }
 
 .home-hero__search {
-  max-width: 480px;
+  max-width: 720px;
   margin: 0 auto;
   text-align: left;
+
+  // AppSearchBar's normal field is intentionally compact for the header.
+  // The homepage hero is its one documented enlarged treatment.
+  :host ::ng-deep .app-search-bar__input {
+    padding-top: var(--space-md);
+    padding-bottom: var(--space-md);
+    font-size: var(--type-body-lg-size);
+  }
 }
 
-// Subhead step — "category legends, section headers" (doc02 §4).
-.home-tools__heading {
-  margin: 0 0 var(--space-lg);
-  font-family: var(--font-display);
-  font-size: var(--type-subhead-size);
-  font-weight: var(--type-subhead-weight);
-  line-height: var(--type-subhead-line-height);
-  color: var(--color-text-primary);
-}
-
-.home-tools__status {
-  margin: 0;
+.home-hero__metadata {
+  margin: var(--space-sm) 0 var(--space-lg);
   font-family: var(--font-body);
-  font-size: var(--type-body-size);
-  line-height: var(--type-body-line-height);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-line-height);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.home-category-chips__desktop,
+.home-category-chips__mobile {
+  display: flex;
+  gap: var(--space-sm);
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.home-category-chips__mobile {
+  display: none;
+}
+
+.home-category-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--type-caption-size);
+  text-decoration: none;
+  transition: border-color 120ms var(--ease-standard), background-color 120ms var(--ease-standard);
+
+  &:hover {
+    border-color: var(--color-accent);
+    background-color: var(--color-border);
+  }
+}
+
+.home-category-chips__view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: var(--space-xs) 0;
+  color: var(--color-info);
+  font-family: var(--font-body);
+  font-size: var(--type-caption-size);
+  text-decoration: underline;
+}
+
+.home-section {
+  margin: 0 auto var(--space-2xl);
+}
+
+.home-section__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+
+  h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--type-subhead-size);
+    font-weight: var(--type-subhead-weight);
+    line-height: var(--type-subhead-line-height);
+    color: var(--color-text-primary);
+  }
+}
+
+.home-section__clear {
+  border: 0;
+  padding: var(--space-xs) 0;
+  background: transparent;
+  color: var(--color-info);
+  font-family: var(--font-body);
+  font-size: var(--type-caption-size);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.home-tool-row {
+  display: flex;
+  gap: var(--space-sm);
+  overflow-x: auto;
+  padding: var(--space-xs) 0 var(--space-sm);
+  scrollbar-width: thin;
+
+  app-tool-tile {
+    flex: 1 1 0;
+    min-width: 150px;
+  }
+}
+
+.home-category-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+
+.home-status {
+  margin: 0;
   color: var(--color-text-secondary);
 }
 
-.home-tools__status--error {
-  color: var(--color-error);
+app-ad-banner {
+  display: block;
+  max-width: 728px;
+  margin: 0 auto;
 }
 
-// Fluid module grid per doc04 §3 (tiles at a fixed minimum width, wrapping
-// into more columns as the viewport widens) — explicitly pinned at the
-// mobile/tablet tiers per doc07 §3/§4 ("single column" is the correct
-// mobile default; tablet returns to a multi-column tile layout) rather than
-// left to auto-fill math alone.
-.home-tools__grid {
-  display: grid;
-  gap: var(--space-md);
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+@include bp.tablet {
+  .home-category-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
 
-  @include bp.mobile {
+@include bp.mobile {
+  .home-hero {
+    margin-bottom: var(--space-xl);
+  }
+
+  .home-hero__title {
+    font-size: var(--type-heading-lg-size);
+  }
+
+  .home-category-chips__desktop {
+    display: none;
+  }
+
+  .home-category-chips__mobile {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  .home-category-chip {
+    min-height: 44px;
+  }
+
+  .home-tool-row {
+    app-tool-tile {
+      flex: 0 0 180px;
+    }
+  }
+
+  .home-category-grid {
     grid-template-columns: 1fr;
   }
 
-  @include bp.tablet {
-    grid-template-columns: repeat(2, 1fr);
+  app-ad-banner {
+    display: none;
   }
 }
