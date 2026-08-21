@@ -5,4 +5,5 @@ import { TOOL_CATEGORY_META } from '../tool-categories';
 
 export const HEALTH_FITNESS_ROUTES: Routes = createToolCategoryRoutes(
   TOOL_CATEGORY_META[TOOL_CATEGORY_SEGMENTS.healthFitness],
+  TOOL_CATEGORY_SEGMENTS.healthFitness,
 );

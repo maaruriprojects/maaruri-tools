@@ -1,0 +1,75 @@
+<div class="category-browse">
+  <header class="category-browse__legend">
+    <div class="category-browse__legend-text">
+      <h1 class="category-browse__title">{{ title() }}</h1>
+      <p class="category-browse__count">{{ toolCount() }} {{ toolCount() === 1 ? 'tool' : 'tools' }}</p>
+    </div>
+
+    <div class="category-browse__sort-desktop">
+      <app-select-control
+        [label]="'Sort by'"
+        [value]="sortMode()"
+        [options]="sortOptions"
+        (valueChange)="onSortChange($event)"
+      />
+    </div>
+
+    <button
+      type="button"
+      class="category-browse__sort-mobile-btn"
+      (click)="openSortModal()"
+    >
+      Sort
+    </button>
+  </header>
+
+  @if (toolRegistry.isLoading()) {
+    <p class="category-browse__status">Loading tools…</p>
+  } @else if (toolRegistry.error()) {
+    <app-empty-state
+      [message]="errorMessage"
+      [actionLabel]="'Try again'"
+      [icon]="'inbox'"
+      (action)="retryRegistry()"
+    />
+  } @else if (sortedTools().length === 0) {
+    <app-empty-state
+      [message]="'No tools in this category yet'"
+      [actionLabel]="'Browse all categories'"
+      [icon]="'inbox'"
+    />
+    <a class="category-browse__browse-all" [routerLink]="['/', locale]">Browse all categories</a>
+  } @else {
+    <div class="category-browse__grid">
+      @for (tool of sortedTools(); track tool.slug; let i = $index) {
+        @if (adInterval() > 0 && (i + 1) % adInterval() === 0) {
+          <app-ad-in-article class="category-browse__ad-cell" />
+        }
+        <app-tool-tile
+          [tool]="tool"
+          [layout]="'grid'"
+          [link]="toolLink(tool)"
+        />
+      }
+    </div>
+  }
+</div>
+
+<app-modal
+  [open]="sortModalOpen()"
+  [title]="'Sort tools'"
+  (closed)="closeSortModal()"
+>
+  <div class="category-browse__sort-modal-content">
+    @for (opt of sortOptions; track opt.value) {
+      <button
+        type="button"
+        class="category-browse__sort-option"
+        [class.category-browse__sort-option--active]="sortMode() === opt.value"
+        (click)="onSortChange(opt.value); closeSortModal()"
+      >
+        {{ opt.label }}
+      </button>
+    }
+  </div>
+</app-modal>

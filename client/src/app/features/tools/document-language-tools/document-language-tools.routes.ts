@@ -5,4 +5,5 @@ import { TOOL_CATEGORY_META } from '../tool-categories';
 
 export const DOCUMENT_LANGUAGE_TOOLS_ROUTES: Routes = createToolCategoryRoutes(
   TOOL_CATEGORY_META[TOOL_CATEGORY_SEGMENTS.documentLanguageTools],
+  TOOL_CATEGORY_SEGMENTS.documentLanguageTools,
 );
