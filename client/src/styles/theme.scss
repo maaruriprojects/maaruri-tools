@@ -33,6 +33,11 @@
   // would barely read against a dark surface), so it lives here, not
   // _tokens.scss.
   --shadow-dropdown: 0 8px 16px rgba(0, 0, 0, 0.12);
+
+  // Component shadows — doc 06 §1 (button rest-state bottom-edge) and §2
+  // (card hover). Light values.
+  --shadow-rest: 0 1px 0 rgba(0, 0, 0, 0.25);
+  --shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
 [data-theme='dark'] {
@@ -51,6 +56,10 @@
   --color-info: #6fa3d8; // Gauge Blue (bright)
 
   --shadow-dropdown: 0 8px 16px rgba(0, 0, 0, 0.4);
+
+  // Component shadows — dark values.
+  --shadow-rest: 0 1px 0 rgba(0, 0, 0, 0.5);
+  --shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 // Bootstrap bridge — _bootstrap-overrides.scss configures Bootstrap's Sass

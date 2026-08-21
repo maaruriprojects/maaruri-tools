@@ -1,6 +1,5 @@
 // Per docs/design/06-component-visual-design.md §1. Rest-state bottom-edge
-// shadow (the "physical switch" detail) is deferred — it needs a new
-// theme-varying token not yet defined in Day 7's token set.
+// shadow (the "physical switch" detail) uses --shadow-rest (theme.scss).
 
 .app-button {
   display: inline-flex;
@@ -26,6 +25,7 @@
 .app-button--primary {
   background-color: var(--color-text-primary);
   color: var(--color-surface);
+  box-shadow: var(--shadow-rest);
 
   &:hover:not(:disabled) {
     background-color: var(--color-text-secondary);
@@ -34,6 +34,7 @@
   &:active:not(:disabled) {
     background-color: var(--color-text-secondary);
     transform: translateY(1px);
+    box-shadow: none;
   }
 
   &:disabled {
@@ -46,6 +47,7 @@
   background-color: var(--color-surface);
   color: var(--color-text-primary);
   border: 1.5px solid var(--color-text-secondary);
+  box-shadow: var(--shadow-rest);
 
   &:hover:not(:disabled) {
     border-color: var(--color-text-primary);
@@ -54,6 +56,7 @@
   &:active:not(:disabled) {
     background-color: var(--color-border);
     transform: translateY(1px);
+    box-shadow: none;
   }
 
   &:disabled {
