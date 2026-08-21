@@ -27,14 +27,14 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('toggles the whole page between light and dark via the test button', () => {
+  it('toggles the whole page between light and dark via the header button', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     TestBed.tick();
 
     expect(document.documentElement.getAttribute('data-theme')).toBeNull();
 
-    const button = (fixture.nativeElement as HTMLElement).querySelector('button.theme-toggle');
+    const button = (fixture.nativeElement as HTMLElement).querySelector('button.app-header__theme-toggle');
     (button as HTMLButtonElement).click();
     fixture.detectChanges();
     TestBed.tick();

@@ -1,0 +1,13 @@
+<a class="app-shell__skip-link" href="#main-content">Skip to content</a>
+
+<app-header />
+
+<main id="main-content" class="app-shell__main">
+  <div class="app-shell__breadcrumb-bar">
+    <app-breadcrumb [items]="breadcrumbItems()" />
+  </div>
+
+  <router-outlet />
+</main>
+
+<app-footer />

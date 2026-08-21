@@ -1,0 +1,115 @@
+<header class="app-header" role="banner">
+  <div class="app-header__inner">
+    <!-- Left: wordmark -->
+    <a class="app-header__wordmark" [routerLink]="['/', locale]">
+      Maaruri Tools
+    </a>
+
+    <!-- Center: desktop category nav -->
+    <nav class="app-header__nav" aria-label="Categories">
+      @for (segment of categories; track segment) {
+        <a
+          class="app-header__nav-link"
+          [routerLink]="categoryRoute(segment)"
+        >{{ categoryMeta[segment].breadcrumbLabel }}</a>
+      }
+    </nav>
+
+    <!-- Right: search + theme toggle -->
+    <div class="app-header__actions">
+      <div class="app-header__search-desktop">
+        <app-search-bar
+          [entries]="entries()"
+          (toolSelected)="onSearchSelected($event)"
+        />
+      </div>
+
+      <button
+        type="button"
+        class="app-header__icon-btn app-header__search-toggle"
+        [attr.aria-label]="mobileSearchOpen() ? 'Close search' : 'Open search'"
+        [attr.aria-expanded]="mobileSearchOpen()"
+        [attr.aria-controls]="'app-header-mobile-search'"
+        (click)="toggleMobileSearch()"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20">
+          <circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="2" />
+          <line x1="15" y1="15" x2="20" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        class="app-header__icon-btn app-header__theme-toggle"
+        [attr.aria-label]="isDark() ? 'Switch to light theme' : 'Switch to dark theme'"
+        [attr.aria-pressed]="isDark()"
+        (click)="toggleTheme()"
+      >
+        @if (isDark()) {
+          <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20">
+            <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2" />
+            <line x1="12" y1="2" x2="12" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <line x1="12" y1="19" x2="12" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <line x1="2" y1="12" x2="5" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <line x1="19" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <line x1="4.5" y1="4.5" x2="6.5" y2="6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <line x1="17.5" y1="17.5" x2="19.5" y2="19.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <line x1="4.5" y1="19.5" x2="6.5" y2="17.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <line x1="17.5" y1="6.5" x2="19.5" y2="4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+          </svg>
+        }
+      </button>
+
+      <button
+        type="button"
+        class="app-header__icon-btn app-header__menu-toggle"
+        aria-label="Toggle category menu"
+        [attr.aria-expanded]="mobileMenuOpen()"
+        [attr.aria-controls]="'app-header-mobile-menu'"
+        (click)="toggleMobileMenu()"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20">
+          @if (!mobileMenuOpen()) {
+            <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          } @else {
+            <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          }
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile search panel -->
+  @if (mobileSearchOpen()) {
+    <div class="app-header__mobile-search" id="app-header-mobile-search">
+      <app-search-bar
+        [entries]="entries()"
+        (toolSelected)="onSearchSelected($event)"
+      />
+    </div>
+  }
+
+  <!-- Mobile category menu panel -->
+  @if (mobileMenuOpen()) {
+    <nav
+      class="app-header__mobile-menu"
+      id="app-header-mobile-menu"
+      aria-label="Categories"
+    >
+      @for (segment of categories; track segment) {
+        <a
+          class="app-header__mobile-menu-link"
+          [routerLink]="categoryRoute(segment)"
+          (click)="mobileMenuOpen.set(false)"
+        >{{ categoryMeta[segment].breadcrumbLabel }}</a>
+      }
+    </nav>
+  }
+</header>
