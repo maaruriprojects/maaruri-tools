@@ -1,0 +1,54 @@
+@if (toolNotFound()) {
+  <app-tool-not-found
+    [categorySegment]="categorySegment()"
+    [breadcrumbLabel]="breadcrumbLabel()"
+  />
+} @else if (tool(); as t) {
+  <div class="tool-shell">
+    <div class="tool-shell__content">
+      @if (readoutValue(); as value) {
+        <section class="tool-shell__readout" aria-label="Result">
+          <div class="tool-shell__readout-value">
+            <span class="tool-shell__readout-number">{{ value }}</span>
+            @if (readoutUnit(); as unit) {
+              <span class="tool-shell__readout-unit">{{ unit }}</span>
+            }
+          </div>
+          <app-copy-button [value]="value" [label]="'Copy'" />
+        </section>
+      }
+
+      <section class="tool-shell__input-area" aria-label="Tool inputs">
+        @if (componentLoading()) {
+          <p class="tool-shell__loading">Loading tool…</p>
+        }
+      </section>
+
+      @if (explanation(); as exp) {
+        <section class="tool-shell__explanation" aria-label="Explanation">
+          <h2 class="tool-shell__explanation-title">How it works</h2>
+          <p class="tool-shell__explanation-text">{{ exp }}</p>
+        </section>
+      }
+
+      @if (hasRelatedTools()) {
+        <section class="tool-shell__related" aria-label="Related tools">
+          <h2 class="tool-shell__related-title">Related tools</h2>
+          <div class="tool-shell__related-row">
+            @for (tool of relatedTools(); track tool.slug) {
+              <app-tool-tile
+                [tool]="tool"
+                [layout]="'compact'"
+                [link]="toolLink(tool)"
+              />
+            }
+          </div>
+        </section>
+      }
+    </div>
+
+    <aside class="tool-shell__sidebar">
+      <app-ad-rectangle />
+    </aside>
+  </div>
+}

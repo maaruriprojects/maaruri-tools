@@ -21,14 +21,15 @@ describe('createToolCategoryRoutes', () => {
     });
   });
 
-  it('omits breadcrumbLabel on the :toolSlug child, so BreadcrumbService falls back to the slug', () => {
+  it('gives the :toolSlug child route the title, metaDescription, categorySegment, and breadcrumbLabel', () => {
     const routes = createToolCategoryRoutes(meta, segment);
     const toolRoute = routes.find((route) => route.path === ':toolSlug');
 
     expect(toolRoute?.data).toEqual({
       title: meta.title,
       metaDescription: meta.metaDescription,
+      categorySegment: segment,
+      breadcrumbLabel: meta.breadcrumbLabel,
     });
-    expect(toolRoute?.data?.['breadcrumbLabel']).toBeUndefined();
   });
 });

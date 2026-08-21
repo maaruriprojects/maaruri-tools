@@ -1,0 +1,23 @@
+.tool-not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-2xl) var(--space-md);
+}
+
+.tool-not-found__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--type-body-sm-size);
+
+  a {
+    color: var(--color-info);
+    text-decoration: underline;
+  }
+}
+
+.tool-not-found__sep {
+  color: var(--color-text-secondary);
+}

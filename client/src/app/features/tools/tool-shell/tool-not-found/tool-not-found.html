@@ -1,0 +1,11 @@
+<div class="tool-not-found">
+  <app-empty-state
+    [message]="'This tool doesn\'t exist. It may have moved — try search, or browse all tools.'"
+    [icon]="'inbox'"
+  />
+  <nav class="tool-not-found__links">
+    <a [routerLink]="['/', locale, categorySegment()]">{{ breadcrumbLabel() || 'Category' }}</a>
+    <span class="tool-not-found__sep">·</span>
+    <a [routerLink]="['/', locale]">All tools</a>
+  </nav>
+</div>
