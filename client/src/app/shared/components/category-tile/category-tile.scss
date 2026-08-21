@@ -1,0 +1,59 @@
+@use '../../../../styles/breakpoints' as *;
+
+.app-category-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  border: 1.5px solid var(--tile-category-color, var(--color-border));
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition:
+    border-color 120ms var(--ease-standard),
+    transform 100ms var(--ease-out-snap),
+    box-shadow 120ms var(--ease-standard);
+
+  &:hover {
+    border-width: 2px;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.app-category-tile__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.app-category-tile__title {
+  font-family: var(--font-display);
+  font-size: var(--type-subhead-size);
+  font-weight: var(--type-subhead-weight);
+  line-height: var(--type-subhead-line-height);
+  color: var(--color-text-primary);
+}
+
+.app-category-tile__count {
+  font-family: var(--font-body);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-line-height);
+  color: var(--color-text-secondary);
+}
+
+// Mobile: horizontal list-row layout
+@include mobile {
+  .app-category-tile {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+  }
+}

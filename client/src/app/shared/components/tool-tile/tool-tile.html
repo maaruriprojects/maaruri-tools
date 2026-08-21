@@ -1,0 +1,16 @@
+@if (tool(); as t) {
+  <a
+    class="app-tool-tile"
+    [class.app-tool-tile--compact]="layout() === 'compact'"
+    [routerLink]="link() ?? []"
+    [style.--tile-category-color]="categoryColorVar()"
+  >
+    <app-icon [name]="t.icon" [size]="layout() === 'compact' ? 20 : 24" />
+    <div class="app-tool-tile__content">
+      <span class="app-tool-tile__name">{{ t.title }}</span>
+      @if (layout() === 'grid') {
+        <span class="app-tool-tile__desc">{{ t.shortDescription }}</span>
+      }
+    </div>
+  </a>
+}

@@ -1,0 +1,34 @@
+@if (open()) {
+  <div
+    class="app-modal__backdrop"
+    role="button"
+    tabindex="0"
+    aria-label="Close dialog"
+    (click)="onBackdropClick($event)"
+    (keydown.enter)="closed.emit()"
+    (keydown.space)="closed.emit()"
+  >
+    <div
+      class="app-modal"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="titleId"
+      tabindex="-1"
+    >
+      <div class="app-modal__header">
+        <h2 class="app-modal__title" [id]="titleId">{{ title() }}</h2>
+        <button
+          type="button"
+          class="app-modal__close"
+          aria-label="Close dialog"
+          (click)="closed.emit()"
+        >
+          <app-icon name="x" [size]="20" />
+        </button>
+      </div>
+      <div class="app-modal__body">
+        <ng-content />
+      </div>
+    </div>
+  </div>
+}

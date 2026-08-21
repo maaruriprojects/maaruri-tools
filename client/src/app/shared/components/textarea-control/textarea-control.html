@@ -1,0 +1,22 @@
+<div class="app-textarea-control">
+  <label class="app-textarea-control__label" [for]="id()">{{ label() }}@if (required()) { <span class="app-textarea-control__required" aria-hidden="true">*</span> }</label>
+  <textarea
+    class="app-textarea-control__field"
+    [id]="id()"
+    [rows]="rows()"
+    [value]="value()"
+    [placeholder]="placeholder()"
+    [disabled]="disabled()"
+    [required]="required()"
+    [attr.maxlength]="maxLength()"
+    [attr.aria-invalid]="error() ? 'true' : null"
+    [attr.aria-describedby]="describedBy()"
+    (input)="value.set($any($event.target).value)"
+  ></textarea>
+  @if (hint() && !error()) {
+    <p class="app-textarea-control__hint" [id]="hintId()">{{ hint() }}</p>
+  }
+  @if (error()) {
+    <p class="app-textarea-control__error" [id]="errorId()">{{ error() }}</p>
+  }
+</div>

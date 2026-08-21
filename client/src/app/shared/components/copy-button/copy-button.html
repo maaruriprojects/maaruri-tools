@@ -1,0 +1,13 @@
+<button
+  type="button"
+  class="app-copy-button"
+  [attr.aria-label]="label()"
+  (click)="onCopy()"
+>
+  @if (showCheck()) {
+    <app-icon name="check" [size]="16" />
+  } @else {
+    <app-icon name="copy" [size]="16" />
+  }
+  <span>{{ label() }}</span>
+</button>

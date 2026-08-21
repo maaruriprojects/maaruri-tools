@@ -1,0 +1,23 @@
+<div class="app-select-control">
+  <label class="app-select-control__label" [for]="id()">{{ label() }}@if (required()) { <span class="app-select-control__required" aria-hidden="true">*</span> }</label>
+  <select
+    class="app-select-control__field"
+    [id]="id()"
+    [value]="value()"
+    [disabled]="disabled()"
+    [required]="required()"
+    [attr.aria-invalid]="error() ? 'true' : null"
+    [attr.aria-describedby]="describedBy()"
+    (change)="value.set($any($event.target).value)"
+  >
+    @for (opt of options(); track opt.value) {
+      <option [value]="opt.value" [selected]="opt.value === value()">{{ opt.label }}</option>
+    }
+  </select>
+  @if (hint() && !error()) {
+    <p class="app-select-control__hint" [id]="hintId()">{{ hint() }}</p>
+  }
+  @if (error()) {
+    <p class="app-select-control__error" [id]="errorId()">{{ error() }}</p>
+  }
+</div>

@@ -13,20 +13,29 @@ import { AppCard, CardLink } from '../../shared/components/card/card';
 import { AppLoadingSpinner } from '../../shared/components/loading-spinner/loading-spinner';
 import { AppPagination } from '../../shared/components/pagination/pagination';
 import { AppSearchBar } from '../../shared/components/search-bar/search-bar';
+import { AppToolTile } from '../../shared/components/tool-tile/tool-tile';
+import { AppCategoryTile } from '../../shared/components/category-tile/category-tile';
+import { AppTextInput } from '../../shared/components/text-input/text-input';
+import { AppSelectControl } from '../../shared/components/select-control/select-control';
+import { AppTextareaControl } from '../../shared/components/textarea-control/textarea-control';
+import { AppModal } from '../../shared/components/modal/modal';
+import { AppEmptyState } from '../../shared/components/empty-state/empty-state';
+import { AppCopyButton } from '../../shared/components/copy-button/copy-button';
+import { AppAdBanner } from '../../shared/ad-components/ad-banner/ad-banner';
+import { AppAdRectangle } from '../../shared/ad-components/ad-rectangle/ad-rectangle';
+import { AppAdInArticle } from '../../shared/ad-components/ad-in-article/ad-in-article';
 import { BaseApiService } from '../../core/api/base-api.service';
 import { DEFAULT_LOCALE } from '../../core/i18n/locale';
 import { LoadingService } from '../../core/loading/loading.service';
 import { SearchIndexService } from '../../features/tools/search-index.service';
 import type { SearchIndexEntry } from '../../shared/models/search-index-entry';
+import type { ToolMeta } from '../../shared/models/tool-meta';
 import { ToastService } from '../../core/toast/toast.service';
 
-const SLOW_REQUEST_MS = 2000; // well past SPINNER_DEBOUNCE_MS — spinner should show
-const FAST_REQUEST_MS = 50; // well under it — spinner should never show
+const SLOW_REQUEST_MS = 2000;
+const FAST_REQUEST_MS = 50;
 const MOCK_LIST_PAGE_SIZE = 10;
 
-// A plain gray circle — a stand-in "icon" so the card grid demo exercises
-// the real <img loading="lazy"> path without needing real icon assets
-// (doc03's icon system isn't built yet).
 const PLACEHOLDER_ICON =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%235B6B74'/%3E%3C/svg%3E";
 
@@ -36,12 +45,37 @@ interface CardDemoItem {
   readonly link: CardLink;
 }
 
-// Internal visual-QA page — renders every shared component built so far.
-// Not linked anywhere; reached only via direct navigation to /dev/ui-kit,
-// and gated by devRouteGuard (core/guards/dev-route.guard.ts).
+const DEMO_TOOL: ToolMeta = {
+  slug: 'bmi-calculator',
+  title: 'BMI Calculator',
+  category: 'health-fitness',
+  shortDescription: 'Calculate your Body Mass Index from height and weight.',
+  componentKey: 'bmi-calculator',
+  seoDescription: 'A BMI calculator.',
+  icon: 'heart-rate-monitor',
+};
+
 @Component({
   selector: 'app-ui-kit',
-  imports: [AppButton, AppBadge, AppLoadingSpinner, AppCard, AppSearchBar, AppPagination],
+  imports: [
+    AppButton,
+    AppBadge,
+    AppLoadingSpinner,
+    AppCard,
+    AppSearchBar,
+    AppPagination,
+    AppToolTile,
+    AppCategoryTile,
+    AppTextInput,
+    AppSelectControl,
+    AppTextareaControl,
+    AppModal,
+    AppEmptyState,
+    AppCopyButton,
+    AppAdBanner,
+    AppAdRectangle,
+    AppAdInArticle,
+  ],
   templateUrl: './ui-kit.html',
   styleUrl: './ui-kit.scss',
 })
@@ -57,8 +91,8 @@ export class UiKit {
   protected readonly buttonVariants: ButtonVariant[] = ['primary', 'secondary', 'ghost'];
   protected readonly badgeColors: BadgeColor[] = ['success', 'warning', 'error', 'info', 'neutral'];
   protected readonly placeholderIcon = PLACEHOLDER_ICON;
+  protected readonly demoTool = DEMO_TOOL;
 
-  // Grid usage: category/tool-listing style, several cards side by side.
   protected readonly cardGridItems: CardDemoItem[] = [
     {
       title: 'Digital Clock',
@@ -77,25 +111,34 @@ export class UiKit {
     },
   ];
 
-  // Standalone usage: a single related-tool suggestion, no image, with
-  // projected content (a badge) beyond the base title/description shape —
-  // proving ng-content over a one-off "badge" input.
   protected readonly relatedToolCard: CardDemoItem = {
     title: 'JSON Formatter',
     description: 'Format, validate, and beautify JSON data.',
     link: ['/', DEFAULT_LOCALE.code, 'development-web-tools', 'json-formatter'],
   };
 
-  // Verifies GlobalErrorHandler end-to-end: throwing here should log full
-  // detail (check the console) and redirect to the friendly ErrorPage.
+  protected readonly categoryTileDemo = {
+    segment: 'health-fitness' as const,
+    title: 'Health & Fitness',
+    toolCount: 12,
+    icon: 'heart-rate-monitor',
+  };
+
+  protected readonly selectOptions = [
+    { value: 'kg', label: 'Kilograms' },
+    { value: 'lb', label: 'Pounds' },
+    { value: 'st', label: 'Stones' },
+  ];
+
+  protected readonly modalOpen = signal(false);
+  protected readonly textInputValue = signal('');
+  protected readonly selectValue = signal('kg');
+  protected readonly textareaValue = signal('');
+
   protected throwTestError(): void {
     throw new Error('Deliberate test error from /dev/ui-kit — verifying GlobalErrorHandler.');
   }
 
-  // Drives the real LoadingService (the same one loading.interceptor.ts
-  // drives for actual HTTP requests) through the exact timeline a slow or
-  // fast request would produce, to verify the global overlay's debounce:
-  // the slow one should show the spinner after ~200ms, the fast one never.
   protected simulateSlowRequest(): void {
     this.simulateRequest(SLOW_REQUEST_MS);
   }
@@ -109,8 +152,6 @@ export class UiKit {
     setTimeout(() => this.loadingService.decrement(), durationMs);
   }
 
-  // One of each severity, so multiple toasts stacking (rather than
-  // overwriting each other) is visible by clicking a few of these in a row.
   protected showSuccessToast(): void {
     this.toastService.success('Copied 22.4 to clipboard.');
   }
@@ -127,31 +168,18 @@ export class UiKit {
     this.toastService.info('Results update automatically as you type.');
   }
 
-  // Real, deliberately-failing HTTP request through BaseApiService — the
-  // actual chain a live failure exercises: loadingInterceptor,
-  // httpErrorInterceptor (logs it, calls ToastService.error()), and this
-  // resource's own `.error()` signal. httpResource() needs an injection
-  // context, which a click handler isn't on its own, hence
-  // runInInjectionContext; see Day 9's ToolRegistryService for the normal
-  // (field-initializer) usage.
   protected triggerFailedRequest(): void {
     runInInjectionContext(this.injector, () => {
       this.api.getResource(() => '/does-not-exist.json', { defaultValue: undefined });
     });
   }
 
-  // Demo-only readout proving the (toolSelected) output actually fires — a real
-  // consumer (e.g. a future header) would navigate using entry.slug/category
-  // instead.
   protected readonly lastSelectedTool = signal<SearchIndexEntry | null>(null);
 
   protected onSearchSelect(entry: SearchIndexEntry): void {
     this.lastSelectedTool.set(entry);
   }
 
-  // AppPagination demo: a mock 45-item list, paginated 10 per page — proves
-  // the component out against a caller that owns the "current page" state
-  // itself (AppPagination has no idea what these items even are).
   protected readonly mockListItems: readonly string[] = Array.from(
     { length: 45 },
     (_, i) => `Item ${i + 1}`,
@@ -164,5 +192,17 @@ export class UiKit {
 
   protected onMockListPageChange(page: number): void {
     this.mockListPage.set(page);
+  }
+
+  protected openModal(): void {
+    this.modalOpen.set(true);
+  }
+
+  protected closeModal(): void {
+    this.modalOpen.set(false);
+  }
+
+  protected onCopyCopied(): void {
+    // Toast is fired by CopyButton itself
   }
 }
