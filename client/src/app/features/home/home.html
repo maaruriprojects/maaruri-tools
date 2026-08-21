@@ -1,36 +1,113 @@
 <div class="home">
-  <section class="home-hero">
-    <h1 class="home-hero__title">{{ title() }}</h1>
+  <section class="home-hero" aria-labelledby="home-title">
+    <h1 id="home-title" class="home-hero__title">{{ title() }}</h1>
     <p class="home-hero__subtitle">{{ metaDescription() }}</p>
 
     <div class="home-hero__search">
       <app-search-bar
         [entries]="searchIndexService.entries()"
-        [placeholder]="'Search tools...'"
+        [placeholder]="placeholderText()"
         (toolSelected)="onToolSelected($event)"
       />
     </div>
+
+    <p class="home-hero__metadata">
+      {{ totalTools() }} tools · 11 categories · zero sign-up
+    </p>
+
+    <nav class="home-category-chips" aria-label="Tool categories">
+      <div class="home-category-chips__desktop">
+        @for (category of categories(); track category.segment) {
+          <a
+            class="home-category-chip"
+            [routerLink]="['/', locale, category.segment]"
+          >
+            <app-icon [name]="category.icon" [size]="16" />
+            <span>{{ category.title }}</span>
+          </a>
+        }
+      </div>
+      <div class="home-category-chips__mobile">
+        @for (category of mobileChips(); track category.segment) {
+          <a
+            class="home-category-chip"
+            [routerLink]="['/', locale, category.segment]"
+          >
+            <app-icon [name]="category.icon" [size]="16" />
+            <span>{{ category.title }}</span>
+          </a>
+        }
+        <a class="home-category-chips__view-all" href="#browse-categories">
+          View all categories <app-icon name="arrow-down" [size]="16" />
+        </a>
+      </div>
+    </nav>
   </section>
 
-  <section class="home-tools">
-    <h2 class="home-tools__heading">All tools</h2>
+  @if (trendingTools().length > 0) {
+    <section class="home-section home-section--tools" aria-labelledby="trending-heading">
+      <div class="home-section__header">
+        <h2 id="trending-heading">Trending</h2>
+      </div>
+      <div class="home-tool-row" aria-label="Trending tools">
+        @for (tool of trendingTools(); track tool.slug) {
+          <app-tool-tile
+            [tool]="tool"
+            [layout]="'compact'"
+            [link]="toolLink(tool)"
+            (click)="recordRecent(tool)"
+          />
+        }
+      </div>
+    </section>
+  }
+
+  @if (recentTools().length > 0) {
+    <section class="home-section home-section--tools" aria-labelledby="recent-heading">
+      <div class="home-section__header">
+        <h2 id="recent-heading">Recently Used</h2>
+        <button type="button" class="home-section__clear" (click)="clearRecent()">Clear</button>
+      </div>
+      <div class="home-tool-row" aria-label="Recently used tools">
+        @for (tool of recentTools(); track tool.slug) {
+          <app-tool-tile
+            [tool]="tool"
+            [layout]="'compact'"
+            [link]="toolLink(tool)"
+            (click)="recordRecent(tool)"
+          />
+        }
+      </div>
+    </section>
+  }
+
+  <section id="browse-categories" class="home-section home-categories" aria-labelledby="categories-heading">
+    <div class="home-section__header">
+      <h2 id="categories-heading">Browse All Categories</h2>
+    </div>
 
     @if (toolRegistry.isLoading()) {
-      <p class="home-tools__status">Loading tools…</p>
-    } @else if (toolRegistry.error(); as error) {
-      <p class="home-tools__status home-tools__status--error">
-        Couldn't load tools: {{ error.message }}
-      </p>
+      <p class="home-status">Loading tools…</p>
+    } @else if (toolRegistry.error()) {
+      <app-empty-state
+        [message]="registryErrorMessage"
+        [actionLabel]="'Try again'"
+        [icon]="'inbox'"
+        (action)="retryRegistry()"
+      />
     } @else {
-      <div class="home-tools__grid">
-        @for (tool of toolRegistry.tools(); track tool.slug) {
-          <app-card
-            [title]="tool.title"
-            [description]="tool.shortDescription"
-            [link]="toolLink(tool)"
+      <div class="home-category-grid">
+        @for (category of categories(); track category.segment) {
+          <app-category-tile
+            [categorySegment]="category.segment"
+            [title]="category.title"
+            [toolCount]="category.toolCount"
+            [icon]="category.icon"
           />
         }
       </div>
     }
   </section>
+
+  <app-ad-banner />
 </div>

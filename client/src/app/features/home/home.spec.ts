@@ -36,6 +36,7 @@ describe('Home', () => {
   let httpMock: HttpTestingController;
 
   beforeEach(async () => {
+    localStorage.clear();
     await TestBed.configureTestingModule({
       imports: [Home],
       providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
@@ -44,6 +45,7 @@ describe('Home', () => {
   });
 
   afterEach(() => {
+    localStorage.clear();
     httpMock.verify();
   });
 
@@ -76,6 +78,39 @@ describe('Home', () => {
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
     expect(text).toContain('Digital Clock');
     expect(text).toContain('BMI Calculator');
+  });
+
+  it('renders metadata, trending tools, and all category tiles', async () => {
+    const fixture = TestBed.createComponent(Home);
+    fixture.detectChanges();
+    TestBed.tick();
+
+    httpMock.expectOne((req) => req.url.endsWith('tool-registry.json')).flush(sampleTools);
+    flushSearchIndex();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.textContent).toContain('2 tools · 11 categories · zero sign-up');
+    expect(el.querySelectorAll('app-category-tile')).toHaveLength(11);
+    expect(el.querySelectorAll('app-tool-tile')).toHaveLength(2);
+  });
+
+  it('renders recently used tools only when history exists', async () => {
+    localStorage.setItem(
+      'maaruri-recent-tools',
+      JSON.stringify([{ slug: 'bmi-calculator', category: 'health-fitness', timestamp: 1 }]),
+    );
+    const fixture = TestBed.createComponent(Home);
+    fixture.detectChanges();
+    TestBed.tick();
+
+    httpMock.expectOne((req) => req.url.endsWith('tool-registry.json')).flush(sampleTools);
+    flushSearchIndex();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Recently Used');
   });
 
   it('shows an error message when the registry request fails', async () => {
