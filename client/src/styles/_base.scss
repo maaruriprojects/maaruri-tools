@@ -1,0 +1,50 @@
+// Global base styles — docs/design/02-color-typography.md §4 (typography) and
+// docs/design/06-component-visual-design.md §0 (focus). These are the
+// document-level defaults that every page inherits: body text in Public Sans,
+// headings in IBM Plex Sans Condensed, link color from the info token, and a
+// reduced-motion safety net that disables all transitions/animations.
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-body-line-height);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 var(--space-md);
+  font-family: var(--font-display);
+  font-weight: var(--type-heading-weight);
+  line-height: 1.25;
+  color: var(--color-text-primary);
+}
+
+a {
+  color: var(--color-info);
+  text-decoration: underline;
+
+  &:hover {
+    text-decoration-thickness: 2px;
+  }
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-readout-bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

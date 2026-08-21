@@ -35,7 +35,18 @@ export class ThemeService {
     if (!isPlatformBrowser(this.platformId)) {
       return 'light';
     }
-    return sessionStorage.getItem(THEME_STORAGE_KEY) === 'dark' ? 'dark' : 'light';
+    const stored = sessionStorage.getItem(THEME_STORAGE_KEY);
+    if (stored === 'dark' || stored === 'light') {
+      return stored;
+    }
+    // First visit — no persisted preference. Respect the OS setting.
+    if (
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+    ) {
+      return 'dark';
+    }
+    return 'light';
   }
 
   private applyTheme(theme: Theme): void {

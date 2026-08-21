@@ -1,0 +1,42 @@
+// Category accent colors — docs/design/03-iconography-logos.md.
+//
+// Each of the 11 tool categories gets a distinct accent hue used for the
+// category-color ring (doc 03) and card hover border (doc 06 §2). Hues are
+// assigned per the formula hsl(H, 42%, 42%) in light theme and
+// hsl(H, 38%, 62%) in dark theme.
+//
+// Hue constraints (doc 03): every hue must be ≥25° from every other and
+// must fall outside four exclusion zones — 15°–50°, 135°–165°, 195°–225°,
+// and 345°–15° (wrapping) — where colors are too close to semantic/brand
+// tokens or adjacent categories to read as distinct.
+//
+// Final 11 hues (sorted): 55, 80, 105, 130, 166, 191, 226, 251, 276, 301, 326.
+// All pairwise gaps ≥25°; all outside exclusion zones.
+
+:root {
+  --cat-color-time-date: hsl(166, 42%, 42%);
+  --cat-color-health-fitness: hsl(326, 42%, 42%);
+  --cat-color-finance-money: hsl(251, 42%, 42%);
+  --cat-color-work-productivity: hsl(80, 42%, 42%);
+  --cat-color-converters-calculators: hsl(226, 42%, 42%);
+  --cat-color-everyday-practical: hsl(105, 42%, 42%);
+  --cat-color-creative-design: hsl(301, 42%, 42%);
+  --cat-color-development-web: hsl(191, 42%, 42%);
+  --cat-color-travel-transportation: hsl(55, 42%, 42%);
+  --cat-color-document-language: hsl(130, 42%, 42%);
+  --cat-color-personal-social: hsl(276, 42%, 42%);
+}
+
+[data-theme='dark'] {
+  --cat-color-time-date: hsl(166, 38%, 62%);
+  --cat-color-health-fitness: hsl(326, 38%, 62%);
+  --cat-color-finance-money: hsl(251, 38%, 62%);
+  --cat-color-work-productivity: hsl(80, 38%, 62%);
+  --cat-color-converters-calculators: hsl(226, 38%, 62%);
+  --cat-color-everyday-practical: hsl(105, 38%, 62%);
+  --cat-color-creative-design: hsl(301, 38%, 62%);
+  --cat-color-development-web: hsl(191, 38%, 62%);
+  --cat-color-travel-transportation: hsl(55, 38%, 62%);
+  --cat-color-document-language: hsl(130, 38%, 62%);
+  --cat-color-personal-social: hsl(276, 38%, 62%);
+}

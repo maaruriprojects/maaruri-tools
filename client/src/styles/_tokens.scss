@@ -117,4 +117,10 @@
   --ease-in-snap: cubic-bezier(0.7, 0, 0.84, 0); // things dismissing/exiting
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1); // plain state changes (color, border)
   --ease-linear: linear; // the loading spinner's rotation only
+
+  // ---------------------------------------------------------------------
+  // Component shadows (doc 06). Theme-varying (stronger in dark mode), so
+  // the light/dark values live in theme.scss — only the property names are
+  // declared here as the shared vocabulary.
+  // ---------------------------------------------------------------------
 }
