@@ -5,4 +5,5 @@ import { TOOL_CATEGORY_META } from '../tool-categories';
 
 export const CONVERTERS_CALCULATORS_ROUTES: Routes = createToolCategoryRoutes(
   TOOL_CATEGORY_META[TOOL_CATEGORY_SEGMENTS.convertersCalculators],
+  TOOL_CATEGORY_SEGMENTS.convertersCalculators,
 );

@@ -5,4 +5,5 @@ import { TOOL_CATEGORY_META } from '../tool-categories';
 
 export const DEVELOPMENT_WEB_TOOLS_ROUTES: Routes = createToolCategoryRoutes(
   TOOL_CATEGORY_META[TOOL_CATEGORY_SEGMENTS.developmentWebTools],
+  TOOL_CATEGORY_SEGMENTS.developmentWebTools,
 );

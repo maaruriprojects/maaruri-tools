@@ -5,4 +5,5 @@ import { TOOL_CATEGORY_META } from '../tool-categories';
 
 export const EVERYDAY_PRACTICAL_TOOLS_ROUTES: Routes = createToolCategoryRoutes(
   TOOL_CATEGORY_META[TOOL_CATEGORY_SEGMENTS.everydayPracticalTools],
+  TOOL_CATEGORY_SEGMENTS.everydayPracticalTools,
 );
